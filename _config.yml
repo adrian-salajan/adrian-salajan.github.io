@@ -1,6 +1,8 @@
 name: software engineering blog
 markdown: kramdown
 
+remote_theme: daviddarnesclear/alembic
+
 permalink: /blog/:year/:month/:day/:title
 
 exclude:
