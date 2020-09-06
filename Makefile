@@ -10,7 +10,4 @@ build:
 	git add _site -f
 	git stash push
 	git checkout master
-	git stash pop
-	rsync -a _site/* ..
- 	#rm -rf _site/*
 
