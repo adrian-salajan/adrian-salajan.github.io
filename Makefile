@@ -7,8 +7,10 @@ build:
 	-it jekyll/jekyll:4 \
 	jekyll build
 	#mv -f _site/* ..
-	rsync -a _site/* ..
- 	#rm -rf _site/*
+	git add _site
 	git stash push
 	git checkout master
 	git stash pop
+	rsync -a _site/* ..
+ 	#rm -rf _site/*
+
