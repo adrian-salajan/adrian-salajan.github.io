@@ -5,8 +5,10 @@ build:
 	--volume="$(shell PWD)/vendor/bundle:/usr/local/bundle" \
 	-p 4000:4000 \
 	-it jekyll/jekyll:4 \
-	jekyll serve
-	mv _site/* ..
+	jekyll build
+	#mv -f _site/* ..
+	rsync -a _site/* ..
+ 	#rm -rf _site/*
 	git stash push
 	git checkout master
 	git stash pop
