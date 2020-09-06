@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<!--
+    Basically Basic Jekyll Theme 1.4.4
+    Copyright 2017-2018 Michael Rose - mademistakes.com | @mmistakes
+    Free for personal and commercial use under the MIT license
+    https://github.com/mmistakes/jekyll-theme-basically-basic/blob/master/LICENSE
+-->
+<html lang="en-US" class="no-js">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+    <title>@title Getting Started with Ruby EventMachine</title>
+    <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search resu...">
+    <link rel="canonical" href="/vendor/bundle/gems/eventmachine-1.2.7/docs/GettingStarted.html">
+  
+
+  <script>
+    /* Cut the mustard */
+    if ( 'querySelector' in document && 'addEventListener' in window ) {
+      document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + 'js';
+    }
+  </script>
+
+  <link rel="stylesheet" href="/assets/stylesheets/main.css">
+  
+
+  
+    
+    <link rel="alternate" type="application/atom+xml" title="Your awesome title" href="/feed.xml">
+  
+</head>
+
+
+  <body class="layout--page title-getting-started-with-ruby-eventmachine">
+
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#primary-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+
+    <div class="sidebar-toggle-wrapper">
+      
+
+      <button class="toggle navicon-button larr" type="button">
+        <span class="toggle-inner">
+          <span class="sidebar-toggle-label visually-hidden">Menu</span>
+          <span class="navicon"></span>
+        </span>
+      </button>
+    </div>
+
+    <div id="sidebar" class="sidebar">
+      <div class="inner">
+        <nav id="primary-nav" class="site-nav" itemscope itemtype="http://schema.org/SiteNavigationElement" aria-label="Main navigation">
+  <ul id="menu-main-navigation" class="menu">
+    <!-- Home link -->
+    <li class="menu-item">
+      <a href="/" itemprop="url">
+        <span itemprop="name">Home</span>
+      </a>
+    </li>
+
+    <!-- site.pages links -->
+    
+    
+
+    
+      
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/about/" itemprop="url">
+            <span itemprop="name">About</span>
+          </a>
+        </li>
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/addressable-2.7.0/CHANGELOG.html" itemprop="url">
+            <span itemprop="name">Addressable 2.7.0</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/colorator-1.1.0/History.html" itemprop="url">
+            <span itemprop="name">1.1.0 / 2016-06-28</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/concurrent-ruby-1.1.6/CHANGELOG.html" itemprop="url">
+            <span itemprop="name">Current</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/eventmachine-1.2.7/CHANGELOG.html" itemprop="url">
+            <span itemprop="name">Changelog</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/eventmachine-1.2.7/docs/DocumentationGuidesIndex.html" itemprop="url">
+            <span itemprop="name">EventMachine documentation guides #</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/eventmachine-1.2.7/docs/GettingStarted.html" itemprop="url">
+            <span itemprop="name">@title Getting Started with Ruby EventMachine</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/public_suffix-4.0.5/2.0-Upgrade.html" itemprop="url">
+            <span itemprop="name">Welcome to PublicSuffix 2.0!</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/public_suffix-4.0.5/CHANGELOG.html" itemprop="url">
+            <span itemprop="name">Changelog</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/public_suffix-4.0.5/SECURITY.html" itemprop="url">
+            <span itemprop="name">Security Policy</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/addressable-2.7.0/" itemprop="url">
+            <span itemprop="name">Addressable</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/colorator-1.1.0/" itemprop="url">
+            <span itemprop="name">colorator</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/concurrent-ruby-1.1.6/" itemprop="url">
+            <span itemprop="name">Concurrent Ruby</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/eventmachine-1.2.7/" itemprop="url">
+            <span itemprop="name">About EventMachine</span>
+          </a>
+        </li>
+      
+    
+      
+      
+        <li class="menu-item">
+          <a href="/vendor/bundle/gems/public_suffix-4.0.5/" itemprop="url">
+            <span itemprop="name">Public Suffix for Ruby</span>
+          </a>
+        </li>
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+  </ul>
+</nav>
+
+        <ul class="contact-list">
+  
+    <li>
+      <a href="mailto:your-email@example.com">
+        <span class="icon icon--email"><svg xmlns="http://www.w3.org/2000/svg" viewBox="313.1 3.7 16 16"><path d="M318.5 8.9c0-.2.2-.4.4-.4h4.5c.2 0 .4.2.4.4s-.2.4-.4.4h-4.5c-.3 0-.4-.2-.4-.4zm.4 2.1h4.5c.2 0 .4-.2.4-.4s-.2-.4-.4-.4h-4.5c-.2 0-.4.2-.4.4s.1.4.4.4zm3.5 1.2c0-.2-.2-.4-.4-.4h-3.1c-.2 0-.4.2-.4.4s.2.4.4.4h3.1c.2.1.4-.1.4-.4zm-1.5-8.4l-1.7 1.4c-.2.1-.2.4 0 .6s.4.2.6 0l1.4-1.2 1.4 1.2c.2.1.4.1.6 0s.1-.4 0-.6l-1.7-1.4c-.3-.1-.5-.1-.6 0zm7.8 6.2c.1.1.1.2.1.3v7.9c0 .8-.7 1.5-1.5 1.5h-12.5c-.8 0-1.5-.7-1.5-1.5v-7.9c0-.1.1-.2.1-.3l1.6-1.3c.2-.1.4-.1.6 0s.1.4 0 .6l-1.2 1 1.8 1.3v-4c0-.6.5-1.1 1.1-1.1h7.5c.6 0 1.1.5 1.1 1.1v4l1.8-1.3-1.2-1c-.2-.1-.2-.4 0-.6s.4-.2.6 0l1.6 1.3zm-11.6 2.2l4 2.8 4-2.8V7.6c0-.1-.1-.2-.2-.2h-7.5c-.1 0-.2.1-.2.2v4.6zm10.9-1l-4.7 3.4 3.4 2.6c.2.1.2.4.1.6-.1.2-.4.2-.6.1l-3.6-2.8-1.2.8c-.1.1-.3.1-.5 0l-1.2-.8-3.6 2.8c-.2.1-.4.1-.6-.1-.1-.2-.1-.4.1-.6l3.4-2.6-4.7-3.4v7.1c0 .4.3.6.6.6h12.5c.4 0 .6-.3.6-.6v-7.1z"/></svg></span>
+        <span class="label">Email</span>
+      </a>
+    </li>
+  
+
+  
+    <li><a href="https://github.com/jekyll">
+  <span class="icon icon--github"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414"><path d="M8 0C3.58 0 0 3.582 0 8c0 3.535 2.292 6.533 5.47 7.59.4.075.547-.172.547-.385 0-.19-.007-.693-.01-1.36-2.226.483-2.695-1.073-2.695-1.073-.364-.924-.89-1.17-.89-1.17-.725-.496.056-.486.056-.486.803.056 1.225.824 1.225.824.714 1.223 1.873.87 2.33.665.072-.517.278-.87.507-1.07-1.777-.2-3.644-.888-3.644-3.953 0-.873.31-1.587.823-2.147-.09-.202-.36-1.015.07-2.117 0 0 .67-.215 2.2.82.64-.178 1.32-.266 2-.27.68.004 1.36.092 2 .27 1.52-1.035 2.19-.82 2.19-.82.43 1.102.16 1.915.08 2.117.51.56.82 1.274.82 2.147 0 3.073-1.87 3.75-3.65 3.947.28.24.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.14.46.55.38C13.71 14.53 16 11.53 16 8c0-4.418-3.582-8-8-8"/></svg></span>
+  <span class="label">GitHub</span>
+</a>
+</li>
+  
+
+  
+    <li><a href="https://twitter.com/jekyllrb">
+  <span class="icon icon--twitter"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414"><path d="M16 3.038c-.59.26-1.22.437-1.885.517.677-.407 1.198-1.05 1.443-1.816-.634.37-1.337.64-2.085.79-.598-.64-1.45-1.04-2.396-1.04-1.812 0-3.282 1.47-3.282 3.28 0 .26.03.51.085.75-2.728-.13-5.147-1.44-6.766-3.42C.83 2.58.67 3.14.67 3.75c0 1.14.58 2.143 1.46 2.732-.538-.017-1.045-.165-1.487-.41v.04c0 1.59 1.13 2.918 2.633 3.22-.276.074-.566.114-.865.114-.21 0-.41-.02-.61-.058.42 1.304 1.63 2.253 3.07 2.28-1.12.88-2.54 1.404-4.07 1.404-.26 0-.52-.015-.78-.045 1.46.93 3.18 1.474 5.04 1.474 6.04 0 9.34-5 9.34-9.33 0-.14 0-.28-.01-.42.64-.46 1.2-1.04 1.64-1.7z" fill-rule="nonzero"/></svg></span>
+  <span class="label">Twitter</span>
+</a>
+</li>
+  
+
+  <li>
+    
+      <a href="/feed.xml" title="Atom Feed">
+        <span class="icon icon--rss"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414"><path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194 11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0 13.806c0-1.21.983-2.195 2.194-2.195zM10.606 16h-3.11c0-4.113-3.383-7.497-7.496-7.497v-3.11c5.818 0 10.606 4.79 10.606 10.607z"/></svg></span>
+        <span class="label">Subscribe</span>
+      </a>
+    
+  </li>
+</ul>
+
+      </div>
+    </div>
+
+    <div class="canvas">
+      <div class="wrapper">
+        
+
+<header id="masthead">
+  <div class="inner">
+    <div class="title-area">
+      
+        <p class="site-title">
+          <a href="/">
+            
+            <span>Your awesome title</span>
+          </a>
+        </p>
+      
+    </div>
+  </div>
+</header>
+
+        <div class="initial-content">
+          <header class="intro">
+  
+
+  <div class="inner">
+    <div class="intro-text">
+      <h1 id="page-title" class="intro-title">@title Getting Started with Ruby EventMachine
+</h1>
+      
+
+      
+
+      
+
+      
+    </div>
+  </div>
+</header>
+
+
+<main id="main" class="page-content" aria-label="Content">
+  <div class="inner">
+    <article class="entry-wrap">
+      <div class="entry-content">
+        <h1 id="title-getting-started-with-ruby-eventmachine">@title Getting Started with Ruby EventMachine</h1>
+<h1 id="markup-markdown">@markup markdown</h1>
+<h1 id="author-michael-s-klishin-dan-sinclair">@author Michael S. Klishin, Dan Sinclair</h1>
+
+<h1 id="getting-started-with-ruby-eventmachine">Getting started with Ruby EventMachine</h1>
+
+<h2 id="about-this-guide">About this guide</h2>
+
+<p>This guide is a quick tutorial that helps you to get started with EventMachine for writing event-driven
+servers, clients and using it as a lightweight concurrency library.
+It should take about 20 minutes to read and study the provided code examples. This guide covers</p>
+
+<ul>
+  <li>Installing EventMachine via <a href="http://rubygems.org">Rubygems</a> and <a href="http://gembundler.com">Bundler</a>.</li>
+  <li>Building an Echo server, the “Hello, world”-like code example of network servers.</li>
+  <li>Building a simple chat, both server and client.</li>
+  <li>Building a very small asynchronous Websockets client.</li>
+</ul>
+
+<h2 id="covered-versions">Covered versions</h2>
+
+<p>This guide covers EventMachine v0.12.10 and 1.0 (including betas).</p>
+
+<h2 id="level">Level</h2>
+
+<p>This guide assumes you are comfortable (but not necessary a guru) with the command line. On Microsoft Windows™,
+we recommend you to use <a href="http://jruby.org">JRuby</a> when running these examples.</p>
+
+<h2 id="installing-eventmachine">Installing EventMachine</h2>
+
+<h3 id="make-sure-you-have-ruby-installed">Make sure you have Ruby installed</h3>
+
+<p>This guide assumes you have one of the supported Ruby implementations installed:</p>
+
+<ul>
+  <li>Ruby 1.8.7</li>
+  <li>Ruby 1.9.2</li>
+  <li><a href="http://jruby.org">JRuby</a> (we recommend 1.6)</li>
+  <li><a href="http://rubini.us">Rubinius</a> 1.2 or higher</li>
+  <li><a href="http://www.rubyenterpriseedition.com">Ruby Enterprise Edition</a></li>
+</ul>
+
+<p>EventMachine works on Microsoft Windows™.</p>
+
+<h3 id="with-rubygems">With Rubygems</h3>
+
+<p>To install the EventMachine gem do</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install eventmachine
+</code></pre></div></div>
+
+<h3 id="with-bundler">With Bundler</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem "eventmachine"
+</code></pre></div></div>
+
+<h3 id="verifying-your-installation">Verifying your installation</h3>
+
+<p>Lets verify your installation with this quick IRB session:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>irb -rubygems
+
+ruby-1.9.2-p180 :001 &gt; require "eventmachine"
+ =&gt; true
+ruby-1.9.2-p180 :002 &gt; EventMachine::VERSION
+ =&gt; "1.0.0.beta.3"
+</code></pre></div></div>
+
+<h2 id="an-echo-server-example">An Echo Server Example</h2>
+
+<p>Lets begin with the classic “Hello, world”-like example, an echo server. The echo server responds clients with the
+same data that was provided. First, here’s the code:</p>
+
+<p>{include:file:examples/guides/getting_started/01_eventmachine_echo_server.rb}</p>
+
+<p>When run, the server binds to port 10000. We can connect using Telnet and verify it’s working:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>telnet localhost 10000
+</code></pre></div></div>
+
+<p>On my machine the output looks like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ telnet localhost 10000
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+</code></pre></div></div>
+
+<p>Let’s send something to our server. Type in “Hello, EventMachine” and hit Enter. The server will respond with
+the same string:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ telnet localhost 10000
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+Hello, EventMachine
+# (here we hit Enter)
+Hello, EventMachine
+# (this ^^^ is our echo server reply)
+</code></pre></div></div>
+
+<p>It works! Congratulations, you now can tell your Node.js-loving friends that you “have done some event-driven programming, too”.
+Oh, and to stop Telnet, hit Control + Shift + ] and then Control + C.</p>
+
+<p>Lets walk this example line by line and see what’s going on. These lines</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'rubygems' # or use Bundler.setup
+require 'eventmachine'
+</code></pre></div></div>
+
+<p>probably look familiar: you use <a href="http://rubygems.org">RubyGems</a> (or <a href="http://gembundler.com/">Bundler</a>) for dependencies and then require EventMachine gem. Boring.</p>
+
+<p>Next:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class EchoServer &lt; EventMachine::Connection
+  def receive_data(data)
+    send_data(data)
+  end
+end
+</code></pre></div></div>
+
+<p>Is the implementation of our echo server. We define a class that inherits from {EventMachine::Connection}
+and a handler (aka callback) for one event: when we receive data from a client.</p>
+
+<p>EventMachine handles the connection setup, receiving data and passing it to our handler, {EventMachine::Connection#receive_data}.</p>
+
+<p>Then we implement our protocol logic, which in the case of Echo is pretty trivial: we send back whatever we receive.
+To do so, we’re using {EventMachine::Connection#send_data}.</p>
+
+<p>Lets modify the example to recognize <code class="language-plaintext highlighter-rouge">exit</code> command:</p>
+
+<p>{include:file:examples/guides/getting_started/02_eventmachine_echo_server_that_recognizes_exit_command.rb}</p>
+
+<p>Our <code class="language-plaintext highlighter-rouge">receive\_data</code> changed slightly and now looks like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def receive_data(data)
+  if data.strip =~ /exit$/i
+    EventMachine.stop_event_loop
+  else
+    send_data(data)
+  end
+end
+</code></pre></div></div>
+
+<p>Because incoming data has trailing newline character, we strip it off before matching it against a simple regular
+expression. If the data ends in <code class="language-plaintext highlighter-rouge">exit</code>, we stop EventMachine event loop with {EventMachine.stop_event_loop}. This unblocks
+main thread and it finishes execution, and our little program exits as the result.</p>
+
+<p>To summarize this first example:</p>
+
+<ul>
+  <li>Subclass {EventMachine::Connection} and override {EventMachine::Connection#send_data} to handle incoming data.</li>
+  <li>Use {EventMachine.run} to start EventMachine event loop and then bind echo server with {EventMachine.start_server}.</li>
+  <li>To stop the event loop, use {EventMachine.stop_event_loop} (aliased as {EventMachine.stop})</li>
+</ul>
+
+<p>Lets move on to a slightly more sophisticated example that will introduce several more features and methods
+EventMachine has to offer.</p>
+
+<h2 id="a-simple-chat-server-example">A Simple Chat Server Example</h2>
+
+<p>Next we will write a simple chat. Initially clients will still use telnet to connect, but then we will add little
+client application that will serve as a proxy between telnet and the chat server. This example is certainly longer
+(~ 150 lines with whitespace and comments) so instead of looking at the final version and going through it line by line,
+we will instead begin with a very simple version that only keeps track of connected clients and then add features
+as we go.</p>
+
+<p>To set some expectations about our example:</p>
+
+<ul>
+  <li>It will keep track of connected clients</li>
+  <li>It will support a couple of commands, à la IRC</li>
+  <li>It will support direct messages using Twitter-like @usernames</li>
+  <li>It won’t use MongoDB, fibers or distributed map/reduce for anything but will be totally <a href="http://bit.ly/webscaletm">Web Scale™</a> nonetheless. Maybe even <a href="http://bit.ly/roflscalevideo">ROFLscale</a>.</li>
+</ul>
+
+<h3 id="step-one-detecting-connections-and-disconnectons">Step one: detecting connections and disconnectons</h3>
+
+<p>First step looks like this:</p>
+
+<p>{include:file:examples/guides/getting_started/04_simple_chat_server_step_one.rb}</p>
+
+<p>We see familiar {EventMachine.run} and {EventMachine.start_server}, but also {EventMachine::Connection#post_init} and {EventMachine::Connection#unbind} we haven’t
+met yet. We don’t use them in this code, so when are they run? Like {EventMachine::Connection#receive_data}, these methods are callbacks. EventMachine calls them
+when certain events happen:</p>
+
+<ul>
+  <li>{EventMachine#post_init} is called by the event loop immediately after the network connection has been established.
+In the chat server example case, this is when a new client connects.</li>
+  <li>{EventMachine#unbind} is called when client disconnects, connection is closed or is lost (because of a network issue, for example).</li>
+</ul>
+
+<p>All our chat server does so far is logging connections or disconnections. What we want it to do next is to keep track of connected clients.</p>
+
+<h3 id="step-two-keep-track-of-connected-clients">Step two: keep track of connected clients</h3>
+
+<p>Next iteration of the code looks like this:</p>
+
+<p>{include:file:examples/guides/getting_started/05_simple_chat_server_step_two.rb}</p>
+
+<p>While the code we added is very straightforward, we have to clarify one this first: subclasses of {EventMachine::Connection} are instantiated by
+EventMachine for every new connected peer. So for 10 connected chat clients, there will be 10 separate <code class="language-plaintext highlighter-rouge">SimpleChatServer</code> instances in our
+server process. Like any other objects, they can be stored in a collection, can provide public API other objects use, can instantiate or inject
+dependencies and in general live a happy life all Ruby objects live until garbage collection happens.</p>
+
+<p>In the example above we use a @@class_variable to keep track of connected clients. In Ruby, @@class variables are accessible from instance
+methods so we can add new connections to the list from <code class="language-plaintext highlighter-rouge">SimpleChatServer#post_init</code> and remove them in <code class="language-plaintext highlighter-rouge">SimpleChatServer#unbind</code>. We can also
+filter connections by some criteria, as <code class="language-plaintext highlighter-rouge">SimpleChatServer#other_peers demonstrates</code>.</p>
+
+<p>So, we keep track of connections but how do we identify them? For a chat app, it’s pretty common to use usernames for that. Lets ask our clients
+to enter usernames when they connect.</p>
+
+<h3 id="step-three-adding-usernames">Step three: adding usernames</h3>
+
+<p>To add usernames, we need to add a few things:</p>
+
+<ul>
+  <li>We need to invite newly connected clients to enter their username.</li>
+  <li>A reader (getter) method on our {EventMachine::Connection} subclass.</li>
+  <li>An idea of connection state (keeping track of whether a particular participant had entered username before).</li>
+</ul>
+
+<p>Here is one way to do it:</p>
+
+<p>{include:file:examples/guides/getting_started/06_simple_chat_server_step_three.rb}</p>
+
+<p>This is quite an update so lets take a look at each method individually. First, <code class="language-plaintext highlighter-rouge">SimpleChatServer#post_init</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def post_init
+  @username = nil
+  puts "A client has connected..."
+  ask_username
+end
+</code></pre></div></div>
+
+<p>To keep track of username we ask chat participants for, we add @username instance variable to our connection class. Connection
+instances are just Ruby objects associated with a particular connected peer, so using @ivars is very natural. To make username
+value accessible to other objects, we added a reader method that was not shown on the snippet above.</p>
+
+<p>Lets dig into <code class="language-plaintext highlighter-rouge">SimpleChatServer#ask_username</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def ask_username
+  self.send_line("[info] Enter your username:")
+end # ask_username
+
+# ...
+
+def send_line(line)
+  self.send_data("#{line}\n")
+end # send_line(line)
+</code></pre></div></div>
+
+<p>Nothing new here, we are using {EventMachine::Connection#send_data} which we have seen before.</p>
+
+<p>In <code class="language-plaintext highlighter-rouge">SimpleChatServer#receive_data</code> we now have to check if the username was entered or we need
+to ask for it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def receive_data(data)
+  if entered_username?
+    handle_chat_message(data.strip)
+  else
+    handle_username(data.strip)
+  end
+end
+
+# ...
+
+def entered_username?
+  !@username.nil? &amp;&amp; !@username.empty?
+end # entered_username?
+</code></pre></div></div>
+
+<p>Finally, handler of chat messages is not yet implemented:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def handle_chat_message(msg)
+  raise NotImplementedError
+end
+</code></pre></div></div>
+
+<p>Lets try this example out using Telnet:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ telnet localhost 10000
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+[info] Enter your username:
+antares_
+[info] Ohai, antares_
+</code></pre></div></div>
+
+<p>and the server output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A client has connected...
+antares_ has joined
+</code></pre></div></div>
+
+<p>This version requires you to remember how to terminate your Telnet session (Ctrl + Shift + ], then Ctrl + C).
+It is annoying, so why don’t we add the same <code class="language-plaintext highlighter-rouge">exit</code> command to our chat server?</p>
+
+<h3 id="step-four-adding-exit-command-and-delivering-chat-messages">Step four: adding exit command and delivering chat messages</h3>
+
+<p>{include:file:examples/guides/getting_started/07_simple_chat_server_step_four.rb}</p>
+
+<p>TBD</p>
+
+<p>Lets test-drive this version. Client A:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ telnet localhost 10000
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+[info] Enter your username:
+michael
+[info] Ohai, michael
+Hi everyone
+michael: Hi everyone
+joe has joined the room
+# here ^^^ client B connects, lets greet him
+hi joe
+michael: hi joe
+joe: hey michael
+# ^^^ client B replies
+exit
+# ^^^ out command in action
+Connection closed by foreign host.
+</code></pre></div></div>
+
+<p>Client B:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~ telnet localhost 10000
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+[info] Enter your username:
+joe
+[info] Ohai, joe
+michael: hi joe
+# ^^^ client A greets us, lets reply
+hey michael
+joe: hey michael
+exit
+# ^^^ out command in action
+Connection closed by foreign host.
+</code></pre></div></div>
+
+<p>And finally, the server output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A client has connected...
+michael has joined
+A client has connected...
+_antares has joined
+[info] _antares has left
+[info] michael has left
+</code></pre></div></div>
+
+<p>Our little char server now supports usernames, sending messages and the <code class="language-plaintext highlighter-rouge">exit</code> command. Next up, private (aka direct) messages.</p>
+
+<h3 id="step-five-adding-direct-messages-and-one-more-command">Step five: adding direct messages and one more command</h3>
+
+<p>To add direct messages, we come up with a simple convention: private messages begin with @username and may have optional colon before
+message text, like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@joe: hey, how do you like eventmachine?
+</code></pre></div></div>
+
+<p>This convention makes parsing of messages simple so that we can concentrate on delivering them to a particular client connection.
+Remember when we added <code class="language-plaintext highlighter-rouge">username</code> reader on our connection class? That tiny change makes this step possible: when a new direct
+message comes in, we extract username and message text and then find then connection for @username in question:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#
+# Message handling
+#
+  
+def handle_chat_message(msg)
+  if command?(msg)
+    self.handle_command(msg)
+  else
+    if direct_message?(msg)
+      self.handle_direct_message(msg)
+    else
+      self.announce(msg, "#{@username}:")
+    end
+  end
+end # handle_chat_message(msg)
+  
+def direct_message?(input)
+  input =~ DM_REGEXP
+end # direct_message?(input)
+  
+def handle_direct_message(input)
+  username, message = parse_direct_message(input)
+  
+  if connection = @@connected_clients.find { |c| c.username == username }
+    puts "[dm] @#{@username} =&gt; @#{username}"
+    connection.send_line("[dm] @#{@username}: #{message}")
+  else
+    send_line "@#{username} is not in the room. Here's who is: #{usernames.join(', ')}"
+  end
+end # handle_direct_message(input)
+  
+def parse_direct_message(input)
+  return [$1, $2] if input =~ DM_REGEXP
+end # parse_direct_message(input)
+</code></pre></div></div>
+
+<p>This snippet demonstrates how one connection instance can obtain another connection instance and send data to it.
+This is a very powerful feature, consider just a few use cases:</p>
+
+<ul>
+  <li>Peer-to-peer protocols</li>
+  <li>Content-aware routing</li>
+  <li>Efficient streaming with optional filtering</li>
+</ul>
+
+<p>Less common use cases include extending C++ core of EventMachine to provide access to  hardware that streams events that
+can be re-broadcasted to any interested parties connected via TCP, UDP or something like AMQP or WebSockets. With this,
+sky is the limit. Actually, EventMachine has several features for efficient proxying data between connections.
+We will not cover them in this guide.</p>
+
+<p>One last feature that we are going to add to our chat server is the <code class="language-plaintext highlighter-rouge">status</code> command that tells you current server time and how many people
+are there in the chat room:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#
+# Commands handling
+#
+  
+def command?(input)
+  input =~ /(exit|status)$/i
+end # command?(input)
+  
+def handle_command(cmd)
+  case cmd
+  when /exit$/i   then self.close_connection
+  when /status$/i then self.send_line("[chat server] It's #{Time.now.strftime('%H:%M')} and there are #{self.number_of_connected_clients} people in the room")
+  end
+end # handle_command(cmd)
+</code></pre></div></div>
+
+<p>Hopefully this piece of code is easy to follow. Try adding a few more commands, for example, the <code class="language-plaintext highlighter-rouge">whoishere</code> command that lists people
+currently in the chat room.</p>
+
+<p>In the end, our chat server looks like this:</p>
+
+<p>{include:file:examples/guides/getting_started/08_simple_chat_server_step_five.rb}</p>
+
+<p>We are almost done with the server but there are some closing thoughts.</p>
+
+<h3 id="step-six-final-version">Step six: final version</h3>
+
+<p>Just in case, here is the final version of the chat server code we have built:</p>
+
+<p>{include:file:examples/guides/getting_started/03_simple_chat_server.rb}</p>
+
+<h3 id="step-seven-future-directions-and-some-closing-thoughts">Step seven: future directions and some closing thoughts</h3>
+
+<p>The chat server is just about 150 lines of Ruby including empty lines and comments, yet it has a few features most of chat server
+examples never add. We did not, however, implement many other features that popular IRC clients like <a href="http://colloquy.info">Colloquy</a> have:</p>
+
+<ul>
+  <li>Chat moderation</li>
+  <li>Multiple rooms</li>
+  <li>Connection timeout detection</li>
+</ul>
+
+<p>How would one go about implementing them? We thought it is worth discussing what else EventMachine has to offer and what ecosystem projects
+one can use to build a really feature-rich Web-based IRC chat client.</p>
+
+<p>With multiple rooms it’s more or less straightforward, just add one more hash and a bunch of commands and use the information about which rooms participant
+is in when you are delivering messages. There is nothing in EventMachine itself that can make the job much easier for developer.</p>
+
+<p>To implement chat moderation feature you may want to do a few things:</p>
+
+<ul>
+  <li>Work with client IP addresses. Maybe we want to consider everyone who connects from certain IPs a moderator.</li>
+  <li>Access persistent data about usernames of moderators and their credentials.</li>
+</ul>
+
+<p>Does EventMachine have anything to offer here? It does. To obtain peer IP address, take a look at {EventMachine::Connection#get_peername}. The name of this method is
+a little bit misleading and originates from low-level socket programming APIs.</p>
+
+<h4 id="a-whirlwind-tour-of-the-eventmachine-ecosystem">A whirlwind tour of the EventMachine ecosystem</h4>
+
+<p>To work with data stores you can use several database drivers that ship with EventMachine itself, however, quite often there are some 3rd party projects in
+the EventMachine ecosystem that have more features, are faster or just better maintained. So we figured it will be helpful to provide a few pointers
+to some of those projects:</p>
+
+<ul>
+  <li>For MySQL, check out <a href="https://github.com/eventmachine/em-mysql">em-mysql</a> project.</li>
+  <li>For PostgreSQL, have a look at Mike Perham’s <a href="https://github.com/mperham/em_postgresql">EventMachine-based PostgreSQL driver</a>.</li>
+  <li>For Redis, there is a young but already popular <a href="https://github.com/mloughran/em-hiredis">em-hiredis</a> library that combines EventMachine’s non-blocking I/O with
+extreme performance of the official Redis C client, <a href="https://github.com/antirez/hiredis">hiredis</a>.</li>
+  <li>For MongoDB, see <a href="https://github.com/bcg/em-mongo">em-mongo</a></li>
+  <li>For Cassandra, Mike Perham <a href="http://www.mikeperham.com/2010/02/09/cassandra-and-eventmachine/">added transport agnosticism feature</a> to the <a href="https://rubygems.org/gems/cassandra">cassandra gem</a>.</li>
+</ul>
+
+<p><a href="http://www.basho.com/products_riak_overview.php">Riak</a> and CouchDB talk HTTP so it’s possible to use <a href="https://github.com/igrigorik/em-http-request">em-http-request</a>.
+If you are aware of EventMachine-based non-blocking drivers for these databases, as well as for HBase, let us know on the <a href="http://groups.google.com/group/eventmachine">EventMachine mailing list</a>.
+Also, EventMachine supports TLS (aka SSL) and works well on <a href="http://jruby.org">JRuby</a> and Windows.</p>
+
+<p>Learn more in our {file:docs/Ecosystem.md EventMachine ecosystem} and {file:docs/TLS.md TLS (aka SSL)} guides.</p>
+
+<h4 id="connection-loss-detection">Connection loss detection</h4>
+
+<p>Finally, connection loss detection. When our chat participant closes her laptop lid, how do we know that she is no longer active? The answer is, when EventMachine
+detects TCP connectin closure, it calls {EventMachine::Connection#unbind}. Version 1.0.beta3 and later also pass an optional argument to that method. The argument
+indicates what error (if any) caused the connection to be closed.</p>
+
+<p>Learn more in our {file:docs/ConnectionFailureAndRecovery.md Connection Failure and Recovery} guide.</p>
+
+<h4 id="what-the-chat-server-example-doesnt-demonstrate">What the Chat Server Example doesn’t demonstrate</h4>
+
+<p>This chat server also leaves out something production quality clients and servers must take care of: buffering. We intentionally did not include any buffering in
+our chat server example: it would only distract you from learning what you really came here to learn: how to use EventMachine to build blazing fast asynchronous
+networking programs quickly. However, {EventMachine::Connection#receive_data} does not offer any guarantees that you will be receiving “whole messages” all the time,
+largely because the underlying transport (UDP or TCP) does not offer such guarantees. Many protocols, for example, AMQP, mandate that large content chunks are
+split into smaller <em>frames</em> of certain size. This means that <a href="https://github.com/ruby-amqp/amq-client">amq-client</a> library, for instance, that has EventMachine-based driver,
+has to deal with figuring out when exactly we received “the whole message”. To do so, it uses buffering and employs various checks to detect <em>frame boundaries</em>.
+So <strong>don’t be deceived by the simplicity of this chat example</strong>: it intentionally leaves framing out, but real world protocols usually require it.</p>
+
+<h2 id="a-proxying-chat-client-example">A (Proxying) Chat Client Example</h2>
+
+<p>TBD</p>
+
+<h2 id="wrapping-up">Wrapping up</h2>
+
+<p>This tutorial ends here. Congratulations! You have learned quite a bit about EventMachine.</p>
+
+<h2 id="what-to-read-next">What to read next</h2>
+
+<p>The documentation is organized as a {file:docs/DocumentationGuidesIndex.md number of guides}, covering all kinds of
+topics. TBD</p>
+
+<h2 id="tell-us-what-you-think">Tell us what you think!</h2>
+
+<p>Please take a moment and tell us what you think about this guide on the <a href="http://bit.ly/jW3cR3">EventMachine mailing list</a>
+or in the #eventmachine channel on irc.freenode.net: what was unclear? What wasn’t covered?
+Maybe you don’t like the guide style or the grammar and spelling are incorrect? Reader feedback is
+key to making documentation better.</p>
+
+      </div>
+    </article>
+  </div>
+</main>
+
+        </div>
+
+        <div class="search-content">
+          <div class="inner">
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    <footer id="footer" class="site-footer">
+  <div class="inner">
+    <div class="copyright">
+      
+        <p>&copy; 2020 Your awesome title.</p>
+      
+    </div>
+  </div>
+</footer>
+
+    
+
+<script async src="/assets/javascripts/main.js"></script>
+
+
+
+
+  </body>
+
+</html>
