@@ -7,7 +7,7 @@ build:
 	-it jekyll/jekyll:4 \
 	jekyll build
 	#mv -f _site/* ..
-	git add _site
+	git add _site -f
 	git stash push
 	git checkout master
 	git stash pop
