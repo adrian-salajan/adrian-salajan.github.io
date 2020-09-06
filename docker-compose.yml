@@ -1,0 +1,14 @@
+# ./docker-compose.yml
+
+version: '3.8' # docker compose version
+services:
+  site:
+    command: jekyll serve
+    image: jekyll/jekyll:4
+    volumes:
+      - .:/srv/jekyll
+      - ./vendor/bundle:/usr/local/bundle
+    ports:
+      - 4000:4000
+    environment:
+      JEKYLL_ENV: local
