@@ -17,7 +17,6 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-
 title: Your awesome title
 email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
@@ -25,13 +24,13 @@ description: >- # this means to ignore newlines until "baseurl:"
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
-github_username:  jekyll
+url: "https://adrian-salajan.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: adrisalajan
+github_username:  adrian-salajan
 
 # Build settings
 #theme: minima
-remote_theme: "mmistakes/jekyll-theme-basically-basic"
+theme: jekyll-theme-basically-basic
 plugins:
   - jekyll-feed
 
@@ -43,7 +42,10 @@ plugins:
 # Excluded items can be processed by explicitly listing the directories or
 # their entries' file path in the `include:` list.
 #
-# exclude:
+exclude:
+    - docker-compose.yml
+    - vendor
+    - commands
 #   - .sass-cache/
 #   - .jekyll-cache/
 #   - gemfiles/
