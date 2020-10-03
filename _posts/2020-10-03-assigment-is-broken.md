@@ -2,12 +2,12 @@
 layout: post
 title:  "The assignment operator is broken!"
 date:   2020-10-02 15:13:25 -0500
-categories: functional-programming fp
+categories: functional programming
 ---
 Most programming languages have this operator `=` which is called the assignment operator.
 Have you evered wondered why this is called assignment and not simply equals ?
 
-You might think equals is already defined and you are probably thinking of ` == `
+You might think equals is already defined and you are probably thinking of `==`
 but this is called "equal to", this one answers a question but assigment is an action, make a equal to b.
 
 ` val a = b `
@@ -100,7 +100,7 @@ but if we write
 
 {% endhighlight %}
 
-we will get a compile error since ` + ` is not defined for our ValueFromEffect, but not just ` + `, we don't
+we will get a compile error since `+` is not defined for our ValueFromEffect, but not just `+`, we don't
 have any operation defined for this type, so we have to find a generic way to extract and combine these values.
 
 {% highlight scala %}
@@ -215,5 +215,9 @@ object PureToImpure {
 Here we have a pureProgram, where no effects run, only descriptions of them exist in ValueFromEffect.
 All the descriptions are then composed together and returned as a single one: `printTenTimes`
 
-On this we call `runEffectToGetValue` once in Main. This is what is called pushing effects to the boundary of the program,
-so we can easily refactor our program.
+On this we call `runEffectToGetValue` once in Main. 
+> This is what is called pushing effects to the boundary of the program.  
+> 
+> And being able to do the copy-paste refactor without changing the behavior is called referencial transparency (or purity - due to lack of effects)
+> which leads to algebraic reasoning,
+> meaning our code has well defined rules and properties making it easier to refactor and compose small programs into larger programs  
