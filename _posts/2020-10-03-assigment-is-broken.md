@@ -4,13 +4,13 @@ title:  "The assignment operator is broken!"
 date:   2020-10-02 15:13:25 -0500
 categories: functional-programming fp
 ---
-Most programming languages have this operator {% ihighlight scala %} = {% endihighlight %} which is called the assignment operator.
+Most programming languages have this operator ` = ` which is called the assignment operator.
 Have you evered wondered why this is called assignment and not simply equals ?
 
-You might think equals is already defined and you are probably thinking of {% ihighlight scala %} == {% endihighlight %}
+You might think equals is already defined and you are probably thinking of ` == `
 but this is called "equal to", this one answers a question but assigment is an action, make a equal to b.
 
-{% ihighlight scala %} val a = b {% endihighlight %}
+` val a = b `
 
 I will try to show you this operator is broken or to be less dramatic,
 one very popular paradigm of programming makes it look broken.
@@ -32,12 +32,12 @@ We can reuse the `five` or use the actual definition of the variable (inlining).
 Basically whenever we see `five` we copy-paste its definition `5`.
 
 In the end I guess we can all agree and find it intuitive that by doing this copy-paste rewrite these programs are equivalent. 
-Here we could really call {% ihighlight scala %} = {% endihighlight %} "equals" since it follows precisely the meaning of {% ihighlight scala %} = {% endihighlight %} in math:
+Here we could really call ` = ` "equals" since it follows precisely the meaning of ` = ` in math:
 
 `5 + x = 10` so then `x = 10 - 5` and replacing `x` in the first we can write 
 `5 + 10 - 5  = 10`. All fine.
 
-In math {% ihighlight scala %} = {% endihighlight %} really means equality, which is different from the assignment from programming.
+In math ` = ` really means equality, which is different from the assignment from programming.
   
 
 ### The problem
@@ -65,19 +65,19 @@ In `readNumberPlusReadNumber` we read ONCE from the console. Even though we said
 
 In `readNumberPlusReadNumberInlined` we read TWICE from the console.
 
-The two programs are not the same anymore! The nice and intuitive meaning of {% ihighlight scala %} = {% endihighlight %} is lost.
+The two programs are not the same anymore! The nice and intuitive meaning of ` = ` is lost.
 We can no longer refactor easily because we have to think about the effects which generate the values, _when_
 did they happen.
 
 
-In this case {% ihighlight scala %} = {% endihighlight %} assigns only the value provided by the effect of reading from the console.
-> In this sense {% ihighlight scala %} = {% endihighlight %} is broken, it does not work as the equals from math, the left side is not truly equal to the right side. It assigns the value, 
+In this case ` = ` assigns only the value provided by the effect of reading from the console.
+> In this sense ` = ` is broken, it does not work as the equals from math, the left side is not truly equal to the right side. It assigns the value, 
 > but loses the effect which generated the value. This makes refactoring harder since the effect is left
 > to the programmers mind and memory to manage it and keep track of.
 
 ### The fix
 
-The good news is that we can fix {% ihighlight scala %} = {% endihighlight %} and make it have the meaning of equals from math.
+The good news is that we can fix ` = ` and make it have the meaning of equals from math.
 The trick is to also keep track of the effect in the type itself, not just the value.
 Our new type will contain: effect + value.
 
@@ -100,7 +100,7 @@ but if we write
 
 {% endhighlight %}
 
-we will get a compile error since {% ihighlight scala %} + {% endihighlight %} is not defined for our ValueFromEffect, but not just {% ihighlight scala %} + {% endihighlight %}, we don't
+we will get a compile error since ` + ` is not defined for our ValueFromEffect, but not just ` + `, we don't
 have any operation defined for this type, so we have to find a generic way to extract and combine these values.
 
 {% highlight scala %}
@@ -176,7 +176,7 @@ The solution is to use our type which keeps track of both effect and value:
 {% endhighlight %}
     
 But using `runEffectToGetValue` is running the effect, this is the same as having console read or print here,
-if we want to build bigger programs while still keeping the benefits of {% ihighlight scala %} = {% endihighlight %} we can't do this.
+if we want to build bigger programs while still keeping the benefits of ` = ` we can't do this.
 
 No matter the number and kind of effects (read/write console, disk, read sistem time) we can always refactor 
 and call `runEffectToGetValue` only once.
