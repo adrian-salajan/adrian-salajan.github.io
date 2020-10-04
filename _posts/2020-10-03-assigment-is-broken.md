@@ -5,7 +5,7 @@ date:   2020-10-02 15:13:25 -0500
 categories: functional programming
 ---
 Most programming languages have this operator `=` which is called the assignment operator.
-Have you evered wondered why this is called assignment and not simply equals ?
+Have you ever wondered why this is called assignment and not simply equals ?
 
 You might think equals is already defined and you are probably thinking of `==`
 but this is called "equal to", this one answers a question but assigment is an action, make a equal to b.
