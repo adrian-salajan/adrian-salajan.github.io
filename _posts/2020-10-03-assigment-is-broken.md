@@ -2,7 +2,7 @@
 layout: post
 title:  "The assignment operator is broken!"
 date:   2020-10-02 15:13:25 -0500
-categories: functional programming
+categories: functional programming, scala
 ---
 Most programming languages have this operator `=` which is called the assignment operator.
 Have you ever wondered why this is called assignment and not simply equals ?
