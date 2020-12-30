@@ -1,8 +1,7 @@
 ---
 layout: post
-title:  "Equality in Scala"
-date:   2020-12-29 15:13:25 -0500
-categories: functional programming, scala
+title:  "Equality in Scala "
+categories: scala
 ---
 
 In Scala 2 the == operator is used for checking by value equality,
@@ -21,17 +20,16 @@ This is because == forwards to .equals(), but right before it
 a null-check is performed.
 
 We can see this on AnyRefs.equals() scaladoc:  
-The expression x == that is equivalent to if (x eq null) that eq null else x.equals(that).
+> The expression `x == that` is equivalent to `if (x eq null) that eq null else x.equals(that)`.
 
-There we see the .eq() which tests equality by reference, which is very rarely needed, specially in FP.
+Here we see the .eq() which tests equality by reference, which is very rarely needed, specially in FP.
 
-This makes usage of .equals() very bad practice in scala, since it can throw exception when the left part is null.  
-Always use == instead of equals Scala.
+This makes usage of .equals() a bad practice in Scala since it can throw exception when the left part is null. Always use == instead of equals() in Scala.
 
 ### Collection equality
 
 == for collections means:
- - they are of the same collection type (seq vs set vs map)
+ - they are of the same collection type (Seq vs Set vs Map)
  - they contain the same elements (as defined by the == on the element type)
  - for sequences elements are in the same order  
 
@@ -48,18 +46,20 @@ Always use == instead of equals Scala.
 ### Imperfections of ==
 
 #### 1. Doesn't work on Arrays
-Never use == on arrays they do not behave like collections when comparing!
+Never use == on arrays, they do not behave like collections when comparing!
+I still get burned by this and it's what motivated this post.
 
 {% highlight scala %}
-{% endhighlight %}
 Array(1, 2, 3) == Array(1, 2, 3) //false
+{% endhighlight %}
+
 
 The solution here is to use Array.sameElements
 
 {% highlight scala %}
     Array(1, 2, 3).sameElements(Array(1, 2, 3)) //true
 {% endhighlight %}
-But humans always make errors so best to block usage of == with Wartremover:
+But we humans always make errors so best to block usage of == with [Wartremover](https://www.wartremover.org/):
 
 
 ```
@@ -78,7 +78,7 @@ This will throw compilation errors when comparing arrays with ==
 ```
 
 
-#### Allows comparing different types
+#### 2. Allows comparing different types
 Because == is defined on AnyRef it can compare any two refs, regardless the type.
 This is a scenario that will always evaluate to false, it is very error prone so the compiler should not even let us write this.
 
@@ -86,17 +86,18 @@ This is a scenario that will always evaluate to false, it is very error prone so
     5 == "5" //always false
 {% endhighlight %}
 
-Cats defines triple equals, which does not allow comparing different types.
+[Cats](https://typelevel.org/cats/) defines triple equals, which does not allow comparing different types.
 
 {% highlight scala %}
     import cats.implicits._
-    "foo" === 3 //does not compile
+    5 === "5" //does not compile
 {% endhighlight %}
 
 This won't work out of the box for arrays. We have to provide an Eq instance for them:
 
 {% highlight scala %}
-    implicit def forArray[A: Eq]: Eq[Array[A]] = Eq.instance\[Array[A]\](_.sameElements(_))
+    implicit def forArray[A: Eq]: Eq[Array[A]] =
+        Eq.instance[Array[A]](_.sameElements(_))
 {% endhighlight %}
 
 Having all this we can go ahead and block usage of == altogether
