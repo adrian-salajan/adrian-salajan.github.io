@@ -28,6 +28,7 @@ url: "https://adrian-salajan.github.io" # the base hostname & protocol for your 
 twitter_username: adrisalajan
 github_username:  adrian-salajan
 
+clicky_analytics: true
 # Build settings
 #theme: minima
 remote_theme: "mmistakes/jekyll-theme-basically-basic"

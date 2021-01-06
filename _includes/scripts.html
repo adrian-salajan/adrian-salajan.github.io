@@ -2,6 +2,10 @@
   {% include google-analytics.html %}
 {% endif %}
 
+{% if jekyll.environment == 'production' and site.clicky_analytics %}
+  {% include clicky-analytics.html %}
+{% endif %}
+
 <script async src="{{ '/assets/javascripts/main.js' | relative_url }}"></script>
 
 {% if site.search %}
