@@ -1,35 +1,33 @@
 ---
 layout: post
-title:  "Pizza"
-date:   2022-01-12 08:00:00 -0200
+title:  "Making invalid pizza recipes unrepresentable"
+date:   2021-01-12 08:00:00 -0200
 categories: functional programming, scala
 ---
-# Making invalid pizza recipes unrepresentable
-
 ## Strong typing
-I'm a believer of strong static typing. A good type is like a math equation - just as an equation describes the equalities and how 
-they change, the dynamics of the interactions, a type describes the invariants and the properties of what the type represents.
+I'm a believer in strong & static typing. A good type is like a math equation - just as an equation describes the equalities and how 
+they change, the possibilities of interactions, a type describes the invariants and the properties of what the type represents.
 Good types allow us to make invalid states unrepresentable in code, transforming runtime bugs into compiler errors.
 
 ## Pizza
 Most of use like pizza. Simplistically to make one we need to first flatten some dough,
 add the base sauce, add the topping and cook it. It is important to follow all these steps and
-in the right order. If we don't follow these steps we get something which is not a pizaa.
+in the right order. If we don't follow these steps we get something which is not a pizza.  
 We will build an API for making pizza and we will try to design it such that the clients of the API
-can make pizzas even if they are not cooks (may forger or do the steps in the wrong order) - they will be forced to follow all the steps, else the code won't compile.
+can make pizzas even if they are not cooks (may forget steps or do them in the wrong order) - they will be forced to follow all the steps, else the code won't compile.
 
 ## Generic Pizza recipe
 To make pizza we need to first flatten some dough,
 add the base sauce, add the topping and cook it.
-We will model the steps in an ADT.
+We will model the steps with an ADT (Algebraic Data Type).
 
 {% highlight scala %}
 
-    sealed trait MakePizzaStep extends Product with Serializable
-    case class SetupDough(size: Int) extends MakePizzaStep
-    case object AddSauce extends MakePizzaStep
-    case class AddTopping(topping: String) extends MakePizzaStep
-    case object Cook extends MakePizzaStep
+sealed trait MakePizzaStep extends Product with Serializable
+case class SetupDough(size: Int) extends MakePizzaStep
+case object AddSauce extends MakePizzaStep
+case class AddTopping(topping: String) extends MakePizzaStep
+case object Cook extends MakePizzaStep
 
 {% endhighlight %}
 
@@ -38,41 +36,42 @@ We model these intermediary results with another ADT
 
 {% highlight scala %}
 
-    sealed trait Pizza
-    case class FinishedPizza(size: Int, topping: String) extends Pizza
+sealed trait Pizza
+case class FinishedPizza(size: Int, topping: String) extends Pizza
 
-    sealed trait UnfinishedPizza extends Pizza
-    object NoPizza extends UnfinishedPizza
-    case class Base(size: Int) extends UnfinishedPizza
-    case class BaseWithSauce(size: Int) extends UnfinishedPizza
-    case class Uncooked(size: Int, topping: String) extends UnfinishedPizza
+sealed trait UnfinishedPizza extends Pizza
+object NoPizza extends UnfinishedPizza
+case class Base(size: Int) extends UnfinishedPizza
+case class BaseWithSauce(size: Int) extends UnfinishedPizza
+case class Uncooked(size: Int, topping: String) extends UnfinishedPizza
 
 {% endhighlight %}
 
-To make pizza we are left to implement the function which will read the steps and make the pizza.
-This method will return either a FinishedPizza, or if the steps provided are in the wrong order or incomplete
-it will return a PizzaError
+To make pizza we are left to implement the function which will read the steps and make the pizza. These functions
+reading ADTs and implementing the behavior are called interpreters.
+The interpreter's result will be either a FinishedPizza or if the steps provided are in the wrong order or incomplete
+it will return a PizzaError.
 
 {% highlight scala %}
 
-    final case class PizzaError(description: String)
+final case class PizzaError(description: String)
 
-    def makePizza(steps: List[MakePizzaStep]): Either[PizzaError, FinishedPizza] = {
-        val pendingPizza = steps.foldLeft(NoPizza.asRight[PizzaError].widen[Pizza]) {
-            case (Right(NoPizza), SetupDough(size)) => Base(size).asRight
-            case (Right(Base(size)), AddSauce) => BaseWithSauce(size).asRight
-            case (Right(BaseWithSauce(size)), AddTopping(topping)) => Uncooked(size, topping).asRight
-            case (Right(Uncooked(size, topping)), _: Cook.type) => FinishedPizza(size, topping).asRight
-            case _ => PizzaError("bad instructions").asLeft[FinishedPizza]
-            case (e: Left[_,_], _) => e
-        }
-    
-        pendingPizza match {
-          case Left(e) => e.asLeft[FinishedPizza]
-          case Right(_: UnfinishedPizza) => PizzaError("bad instructions").asLeft[FinishedPizza]
-          case Right(p: FinishedPizza) => p.asRight
-        }
+def makePizza(steps: List[MakePizzaStep]): Either[PizzaError, FinishedPizza] = {
+    val pendingPizza = steps.foldLeft(NoPizza.asRight[PizzaError].widen[Pizza]) {
+        case (Right(NoPizza), SetupDough(size)) => Base(size).asRight
+        case (Right(Base(size)), AddSauce) => BaseWithSauce(size).asRight
+        case (Right(BaseWithSauce(size)), AddTopping(topping)) => Uncooked(size, topping).asRight
+        case (Right(Uncooked(size, topping)), _: Cook.type) => FinishedPizza(size, topping).asRight
+        case _ => PizzaError("bad instructions").asLeft[FinishedPizza]
+        case (e: Left[_,_], _) => e
     }
+
+    pendingPizza match {
+      case Left(e) => e.asLeft[FinishedPizza]
+      case Right(_: UnfinishedPizza) => PizzaError("bad instructions").asLeft[FinishedPizza]
+      case Right(p: FinishedPizza) => p.asRight
+    }
+}
 
 {% endhighlight %}
 
@@ -80,17 +79,16 @@ Our API is now complete in the sense that we can make pizzas by following pizza 
 
 {% highlight scala %}
 
-    test("make pizza") {
-    
-        val steps = List(SetupDough(2), AddSauce, AddTopping("mushrooms"), Cook)
-    
-        val mediumMushroomPizza = TypeOrder.makePizza(steps)
-    
-        inside (mediumMushroomPizza) {
-          case Left(e) => Assertions.fail(e.description)
-          case Right(pizza) => Assertions.assert(pizza == FinishedPizza(2, "mushrooms"))
-        }
+test("make pizza") {
+    val steps = List(SetupDough(2), AddSauce, AddTopping("mushrooms"), Cook)
+
+    val mediumMushroomPizza = TypeOrder.makePizza(steps)
+
+    inside (mediumMushroomPizza) {
+      case Left(e) => Assertions.fail(e.description)
+      case Right(pizza) => Assertions.assert(pizza == FinishedPizza(2, "mushrooms"))
     }
+}
 
 {% endhighlight %}
 
@@ -102,47 +100,47 @@ We start with a definition which let's us build recipes like this:
 
 {% highlight scala %}
 
-    val recipe = 
-      PizzaRecipeBuilder(SetupDough(2))
-        .andThen(AddSauce)
-        .andThen(AddTopping("mushrooms"))
-        .andThen(Cook)
-        .recipe
+val recipe = 
+  PizzaRecipeBuilder(SetupDough(2))
+    .andThen(AddSauce)
+    .andThen(AddTopping("mushrooms"))
+    .andThen(Cook)
+    .recipe
 
 {% endhighlight %}  
 {% highlight scala %}
 
-    sealed class PizzaRecipeBuilder[A <: MakePizzaStep](head: A) { that =>
+sealed class PizzaRecipeBuilder[A <: MakePizzaStep](head: A) { that =>
     protected val _steps: List[MakePizzaStep] = List(head)
-    
-        def steps: List[MakePizzaStep] = _steps.reverse
-    
-        def andThen[B <: MakePizzaStep](nextStep: B): PizzaRecipeBuilder[B] =
-          new PizzaRecipeBuilder(nextStep) {
-            override val _steps: List[MakePizzaStep] = nextStep :: that._steps
-          }
-    }
+
+    def steps: List[MakePizzaStep] = _steps.reverse
+
+    def andThen[B <: MakePizzaStep](nextStep: B): PizzaRecipeBuilder[B] =
+      new PizzaRecipeBuilder(nextStep) {
+        override val _steps: List[MakePizzaStep] = nextStep :: that._steps
+      }
+}
 
 {% endhighlight %}
 
-This is just the starting point since with it we can still build invalid recipes
+This is just the starting point since with it we can still build invalid recipes.
 
 {% highlight scala %}
 
-    test("pizza builder  - wrong ordering") {
-      val recipe = PizzaRecipeBuilder(SetupDough(2))
-        //Woops! we are forgetting the Sauce
-        .andThen(AddTopping("mushrooms")) 
-        .andThen(Cook)
-        .recipe
-  
-      val pizza = TypeOrder.makePizza(recipe)
-  
-      inside(pizza) {
-        case Left(e) => Assertions.fail(e.description)
-        case Right(p) => Assertions.assert(p == FinishedPizza(2, "mushrooms"))
-      }
-    }
+test("pizza builder  - wrong ordering") {
+  val recipe = PizzaRecipeBuilder(SetupDough(2))
+    //Woops! we are forgetting the Sauce
+    .andThen(AddTopping("mushrooms")) 
+    .andThen(Cook)
+    .recipe
+
+  val pizza = TypeOrder.makePizza(recipe)
+
+  inside(pizza) {
+    case Left(e) => Assertions.fail(e.description)
+    case Right(p) => Assertions.assert(p == FinishedPizza(2, "mushrooms"))
+  }
+}
 
 {% endhighlight %}
 
@@ -153,29 +151,29 @@ which will be a required implicit parameter to andThen(). We will then enforce c
 
 {% highlight scala %}
 
-    sealed class PizzaRecipeBuilder[A <: MakePizzaStep](firstStep: A) { that =>
-      protected val _steps: List[MakePizzaStep] = List(firstStep)
+sealed class PizzaRecipeBuilder[A <: MakePizzaStep](firstStep: A) { that =>
+  protected val _steps: List[MakePizzaStep] = List(firstStep)
 
-      def steps: List[MakePizzaStep] = _steps.reverse
+  def steps: List[MakePizzaStep] = _steps.reverse
 
-      def andThen[B <: MakePizzaStep](nextStep: B)(implicit ev: RecipeTransition[A, B]): PizzaRecipeBuilder[B] =
-        new PizzaRecipeBuilder(nextStep) {
-          override val _steps: List[MakePizzaStep] = nextStep :: that._steps
-        }
+  def andThen[B <: MakePizzaStep](nextStep: B)(implicit ev: RecipeTransition[A, B]): PizzaRecipeBuilder[B] =
+    new PizzaRecipeBuilder(nextStep) {
+      override val _steps: List[MakePizzaStep] = nextStep :: that._steps
     }
+}
 
-    sealed trait RecipeTransition[A <: MakePizzaStep, B <: MakePizzaStep]  
+sealed trait RecipeTransition[A <: MakePizzaStep, B <: MakePizzaStep]  
 
-    object RecipeTransition {
-      implicit val addSauceAfterDough: RecipeTransition[SetupDough, AddSauce.type] =
-        new RecipeTransition[SetupDough, AddSauce.type] {}  
+object RecipeTransition {
+  implicit val addSauceAfterDough: RecipeTransition[SetupDough, AddSauce.type] =
+    new RecipeTransition[SetupDough, AddSauce.type] {}  
 
-      implicit val addToppingAfterSauce: RecipeTransition[AddSauce.type, AddTopping] =
-        new RecipeTransition[AddSauce.type , AddTopping] {}  
+  implicit val addToppingAfterSauce: RecipeTransition[AddSauce.type, AddTopping] =
+    new RecipeTransition[AddSauce.type , AddTopping] {}  
 
-      implicit val cookAfterTopping: RecipeTransition[AddTopping, Cook.type] =
-        new RecipeTransition[AddTopping, Cook.type] {}
-    }
+  implicit val cookAfterTopping: RecipeTransition[AddTopping, Cook.type] =
+    new RecipeTransition[AddTopping, Cook.type] {}
+}
 
 {% endhighlight %}
 
@@ -183,20 +181,20 @@ Now our test won't compile, as it is forcing us to add the sauce
 
 {% highlight scala %}
 
-    test("pizza builder  - wrong ordering") {
-      val recipe = PizzaRecipeBuilder(SetupDough(2))
-        .andThen(AddTopping("mushrooms")) 
-        // Compile error: could not find implicit value for parameter ev: RecipeTransition[SetupDough,AddSauce.type]
-        .andThen(Cook)
-        .recipe
-  
-      val pizza = TypeOrder.makePizza(recipe)
-  
-      inside(pizza) {
-        case Left(e) => Assertions.fail(e.description)
-        case Right(p) => Assertions.assert(p == FinishedPizza(2, "mushrooms"))
-      }
-    }
+test("pizza builder  - wrong ordering") {
+  val recipe = PizzaRecipeBuilder(SetupDough(2))
+    .andThen(AddTopping("mushrooms")) 
+    // Compile error: could not find implicit value for parameter ev: RecipeTransition[SetupDough,AddSauce.type]
+    .andThen(Cook)
+    .recipe
+
+  val pizza = TypeOrder.makePizza(recipe)
+
+  inside(pizza) {
+    case Left(e) => Assertions.fail(e.description)
+    case Right(p) => Assertions.assert(p == FinishedPizza(2, "mushrooms"))
+  }
+}
 
 {% endhighlight %}
 
@@ -206,15 +204,15 @@ or we might forget the first steps, like setting up the dough
 
 {% highlight scala %}
 
-    val uncookedPizza = PizzaRecipeBuilder(SetupDough(2))
-      .andThen(AddSauce)
-      .andThen(AddTopping("mushrooms"))
-      .recipe
+val uncookedPizza = PizzaRecipeBuilder(SetupDough(2))
+  .andThen(AddSauce)
+  .andThen(AddTopping("mushrooms"))
+  .recipe
 
-    val notEvenAMargherita= PizzaRecipeBuilder(AddSauce)
-      .andThen(AddTopping("mushrooms"))
-      .andThen(Cook)
-      .recipe
+val notEvenAMargherita= PizzaRecipeBuilder(AddSauce)
+  .andThen(AddTopping("mushrooms"))
+  .andThen(Cook)
+  .recipe
 
 {% endhighlight %}
 
@@ -225,30 +223,30 @@ but instead we will use the more suggestive Is[A, B] typeclass from Cats.
 
 {% highlight scala %}
 
-    import cats.evidence.===
-    def recipe(implicit ev: A === Cook.type): List[MakePizzaStep] = _steps.reverse
+import cats.evidence.===
+def recipe(implicit ev: A === Cook.type): List[MakePizzaStep] = _steps.reverse
 
 {% endhighlight %}
 
 Second, we can not allow starting the recipe from an intermediary step. We will create an apply method in the companion object with implicit parameters
-that only accepts the correct first pizza recipe step (SetupDough), and we make  the constructor private - this accepts every step and we need it to make the transition from a Pizza RecipeBuilder[A] to RecipeBuilder[B]
+that accepts only the correct first pizza recipe step (SetupDough), and we make the constructor private - this accepts every step and we need it to make the transition from a PizzaRecipeBuilder[A] to PizzaRecipeBuilder[B].
 
 {% highlight scala %}
 
-    sealed class PizzaRecipeBuilder[A <: MakePizzaStep] private(firstStep: A) { that =>
+sealed class PizzaRecipeBuilder[A <: MakePizzaStep] private(firstStep: A) { that =>
     protected val _steps: List[MakePizzaStep] = List(firstStep)
-    
-        def recipe(implicit ev: A === Cook.type): List[MakePizzaStep] = _steps.reverse
-    
-        def andThen[B <: MakePizzaStep](nextStep: B)(implicit ev: RecipeTransition[A, B]): PizzaRecipeBuilder[B] =
-          new PizzaRecipeBuilder(nextStep) {
-            override val _steps: List[MakePizzaStep] = nextStep :: that._steps
-          }
-    }
-    
-    object PizzaRecipeBuilder {
-      def apply[A <: MakePizzaStep](a: A)(implicit ev: A === SetupDough) = new PizzaRecipeBuilder[A](a)
-    }
+
+    def recipe(implicit ev: A === Cook.type): List[MakePizzaStep] = _steps.reverse
+
+    def andThen[B <: MakePizzaStep](nextStep: B)(implicit ev: RecipeTransition[A, B]): PizzaRecipeBuilder[B] =
+      new PizzaRecipeBuilder(nextStep) {
+        override val _steps: List[MakePizzaStep] = nextStep :: that._steps
+      }
+}
+
+object PizzaRecipeBuilder {
+  def apply[A <: MakePizzaStep](a: A)(implicit ev: A === SetupDough) = new PizzaRecipeBuilder[A](a)
+}
 
 {% endhighlight %}
 
@@ -256,36 +254,38 @@ Having all this we can go ahead and make makePizza private because we will wrap 
 
 {% highlight scala %}
 
-    sealed class PizzaRecipeBuilder[A <: MakePizzaStep] private(firstStep: A) { that =>
+sealed class PizzaRecipeBuilder[A <: MakePizzaStep] private(firstStep: A) { that =>
     protected val _steps: List[MakePizzaStep] = List(firstStep)
 
-    def recipe(implicit ev: A === Cook.type): PizzaRecipe = new PizzaRecipe(_steps.reverse)
+def recipe(implicit ev: A === Cook.type): PizzaRecipe = new PizzaRecipe(_steps.reverse)
 
-    def andThen[B <: MakePizzaStep](nextStep: B)(implicit ev: RecipeTransition[A, B]): PizzaRecipeBuilder[B] =
-      new PizzaRecipeBuilder(nextStep) {
-        override val _steps: List[MakePizzaStep] = nextStep :: that._steps
-      }
-    }
+def andThen[B <: MakePizzaStep](nextStep: B)(implicit ev: RecipeTransition[A, B]): PizzaRecipeBuilder[B] =
+  new PizzaRecipeBuilder(nextStep) {
+    override val _steps: List[MakePizzaStep] = nextStep :: that._steps
+  }
+}
 
-    object PizzaRecipeBuilder {
-      def apply[A <: MakePizzaStep](a: A)(implicit ev: A === SetupDough) = new PizzaRecipeBuilder[A](a)
-    }
+object PizzaRecipeBuilder {
+  def apply[A <: MakePizzaStep](a: A)(implicit ev: A === SetupDough) = new PizzaRecipeBuilder[A](a)
+}
 
-    def makePizzaSafe(steps: PizzaRecipe): FinishedPizza = {
-        makePizza(steps.list).toOption.get //safe due to our PizzaRecipeBuilder/Recipe guarantees
-    }
+def makePizzaSafe(steps: PizzaRecipe): FinishedPizza = {
+    makePizza(steps.list).toOption.get //safe due to our PizzaRecipeBuilder/Recipe guarantees
+}
 
 {% endhighlight %}
 
-With this, the client can only make FinishedPizza(s)! no error is possible.
+With this the API client can only make FinishedPizza(s)! no error is possible.
 
 ---
-!! Transforming an Either to an Option and calling get on it is a cheat. In the small context of makePizzaSafe
+  
+\* Transforming an Either to an Option and calling get on it is a cheat. In the small context of makePizzaSafe
 there is no type guarantee that this won't fail - but in the larger context of the API we know the user of the client can build
 only correct PizzaRecipe(s).  
 Given the safe PizzaRecipeBuilder, we should be able to rewrite makePizza without involving Either/PizzaError but the tricky part
-is telling it to only accept a valid list of MakePizzaStep. Probably the solution for this would be to use Shapeless HList which remembers the types for each element
-and the RecipeTransition typeclass as evidence that the order is correct.
-I'm not familiar enough with Shapeless magic so I will leave this for another time.
+is telling it to only accept a valid list of MakePizzaStep. Probably the solution would be to use Shapeless HList which remembers the types for each element
+together with the RecipeTransition typeclass as evidence (implicits) that the order is correct.
+I'm not familiar enough with Shapeless magic so I will leave this for another time.  
+
 ---
 
