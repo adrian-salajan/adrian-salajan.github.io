@@ -6,13 +6,19 @@ categories: functional programming, scala
 ---
 # Making invalid pizza recipes unrepresentable
 
+## Strong typing
+I'm a believer of strong static typing. A good type is like a math equation - just as an equation describes the equalities and how 
+they change, the dynamics of the interactions, a type describes the invariants and the properties of what the type represents.
+Good types allow us to make invalid states unrepresentable in code, transforming runtime bugs into compiler errors.
+
+## Pizza
 Most of use like pizza. Simplistically to make one we need to first flatten some dough,
 add the base sauce, add the topping and cook it. It is important to follow all these steps and
 in the right order. If we don't follow these steps we get something which is not a pizaa.
 We will build an API for making pizza and we will try to design it such that the clients of the API
-can make pizzas even if they are not cooks - they will be forced to follow all the steps, else the code won't compile.
+can make pizzas even if they are not cooks (may forger or do the steps in the wrong order) - they will be forced to follow all the steps, else the code won't compile.
 
-#Generic Pizza recipe
+## Generic Pizza recipe
 To make pizza we need to first flatten some dough,
 add the base sauce, add the topping and cook it.
 We will model the steps in an ADT.
@@ -27,7 +33,7 @@ We will model the steps in an ADT.
 
 {% endhighlight %}
 
-After each of the steps we get an unfinished pizza,and only following all the steps we get a finished pizza. 
+After each of the steps we get an unfinished pizza, and only following all the steps we get a finished pizza. 
 We model these intermediary results with another ADT
 
 {% highlight scala %}
@@ -45,7 +51,7 @@ We model these intermediary results with another ADT
 
 To make pizza we are left to implement the function which will read the steps and make the pizza.
 This method will return either a FinishedPizza, or if the steps provided are in the wrong order or incomplete
-it will return a Pizza Error
+it will return a PizzaError
 
 {% highlight scala %}
 
@@ -88,8 +94,8 @@ Our API is now complete in the sense that we can make pizzas by following pizza 
 
 {% endhighlight %}
 
-But is is also very error prone, since the user of the API needs to know details about how pizza is made, else he will get a pizza error.
-He needs to know to build the list with all the steps and in the right order before passing it to makepizza()
+But it is also very error prone, since the user of the API needs to know details about how pizza is made, else he will get a pizza error.
+He needs to know to build the list with all the steps and in the right order before passing it to makePizza().
 It would be best if the API would be safer to use such that the user will be guided in making valid pizzas.
 Our API will provide a PizzaRecipeBuilder. It will have the responsibility of building the recipes in the right order.
 We start with a definition which let's us build recipes like this:
@@ -161,7 +167,7 @@ which will be a required implicit parameter to andThen(). We will then enforce c
     sealed trait RecipeTransition[A <: MakePizzaStep, B <: MakePizzaStep]  
 
     object RecipeTransition {
-      implicit val addSauceAfterDough: RecipeTransition[SetupDough, AddSauce.type ] =
+      implicit val addSauceAfterDough: RecipeTransition[SetupDough, AddSauce.type] =
         new RecipeTransition[SetupDough, AddSauce.type] {}  
 
       implicit val addToppingAfterSauce: RecipeTransition[AddSauce.type, AddTopping] =
@@ -180,7 +186,7 @@ Now our test won't compile, as it is forcing us to add the sauce
     test("pizza builder  - wrong ordering") {
       val recipe = PizzaRecipeBuilder(SetupDough(2))
         .andThen(AddTopping("mushrooms")) 
-        // could not find implicit value for parameter ev: RecipeTransition[SetupDough,AddSauce.type]
+        // Compile error: could not find implicit value for parameter ev: RecipeTransition[SetupDough,AddSauce.type]
         .andThen(Cook)
         .recipe
   
@@ -194,9 +200,9 @@ Now our test won't compile, as it is forcing us to add the sauce
 
 {% endhighlight %}
 
-The design up to here forces us to define the recipe in the correct order, but it still has 2 issue.
+The design up to here forces us to define the recipe in the correct order but it still has 2 issue.
 Even though the sequence might be correct, we might forget some last steps, like Cooking,
-or we might forget the first steps, like setting up the Dough
+or we might forget the first steps, like setting up the dough
 
 {% highlight scala %}
 
@@ -212,8 +218,9 @@ or we might forget the first steps, like setting up the Dough
 
 {% endhighlight %}
 
-To fix this we need to do a few things. First we will only allow calling recipe on a PizzaRecipeBuilder[Cook].
-We can do this by defining a new TypeClass FinalStep[A] with a single implementation FinalStep[Cook] and require it on the recipe function,
+To fix this we need to do a few things. First we will only allow calling recipe on a PizzaRecipeBuilder[Cook] since this is the last step
+and guarantees we have all the steps.
+We can do this by defining a new typeclass FinalStep[A] with a single implementation FinalStep[Cook] and require it on the recipe function,
 but instead we will use the more suggestive Is[A, B] typeclass from Cats.
 
 {% highlight scala %}
@@ -223,8 +230,8 @@ but instead we will use the more suggestive Is[A, B] typeclass from Cats.
 
 {% endhighlight %}
 
-Second, we can not allow starting the recipe from am intermediary step. We will put implicit parameters in the companion object
-so that we can make private the construtor - we still need it to make the transition from a Pizza RecipeBuilder[A] to RecipeBuilder[B]
+Second, we can not allow starting the recipe from an intermediary step. We will create an apply method in the companion object with implicit parameters
+that only accepts the correct first pizza recipe step (SetupDough), and we make  the constructor private - this accepts every step and we need it to make the transition from a Pizza RecipeBuilder[A] to RecipeBuilder[B]
 
 {% highlight scala %}
 
@@ -245,7 +252,7 @@ so that we can make private the construtor - we still need it to make the transi
 
 {% endhighlight %}
 
-Having all this, we can go ahead make makePizza private, because we will wrap it with a safe pizza method
+Having all this we can go ahead and make makePizza private because we will wrap it with a safe pizza method and offer this instead to the client to build pizza
 
 {% highlight scala %}
 
@@ -272,9 +279,10 @@ Having all this, we can go ahead make makePizza private, because we will wrap it
 
 With this, the client can only make FinishedPizza(s)! no error is possible.
 
-!! Transforming an Either to an Option and getting on it is a cheat. In the small context of makePizzaSafe
+---
+Transforming an Either to an Option and calling get on it is a cheat. In the small context of makePizzaSafe
 there is no type guarantee that this won't fail - but in the larger context of the API we know the user of the client can build
-only safe Recipes. A type-safe solution for this would be to use Shapeless HList instead of a List and have a smarter makePizza function
+only correct PizzaRecipe. A type-safe solution for this would be to use Shapeless HList instead of a List and have a smarter makePizza function
 using Shapeless magic. I'm not experienced in Shapeless so I will leave it as it is for now.
 
 
