@@ -280,16 +280,12 @@ Having all this we can go ahead and make makePizza private because we will wrap 
 With this, the client can only make FinishedPizza(s)! no error is possible.
 
 ---
-Transforming an Either to an Option and calling get on it is a cheat. In the small context of makePizzaSafe
+!! Transforming an Either to an Option and calling get on it is a cheat. In the small context of makePizzaSafe
 there is no type guarantee that this won't fail - but in the larger context of the API we know the user of the client can build
-only correct PizzaRecipe. A type-safe solution for this would be to use Shapeless HList instead of a List and have a smarter makePizza function
-using Shapeless magic. I'm not experienced in Shapeless so I will leave it as it is for now.
-
-
-
+only correct PizzaRecipe(s).  
+Given the safe PizzaRecipeBuilder, we should be able to rewrite makePizza without involving Either/PizzaError but the tricky part
+is telling it to only accept a valid list of MakePizzaStep. Probably the solution for this would be to use Shapeless HList which remembers the types for each element
+and the RecipeTransition typeclass as evidence that the order is correct.
+I'm not familiar enough with Shapeless magic so I will leave this for another time.
 ---
-
-{% highlight scala %}
-
-{% endhighlight %}
 
