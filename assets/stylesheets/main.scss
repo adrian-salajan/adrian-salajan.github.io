@@ -13,3 +13,16 @@ code.language-plaintext.highlighter-rouge {
   background: #1c2023;
   color: $base05;
 }
+
+
+.intro-image {
+    max-height: 20rem;
+    overflow: hidden;
+    position: relative;
+}
+.intro-image img {
+    margin-top: -10em;
+}
+
+//entry thumbnails
+
