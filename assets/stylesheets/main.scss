@@ -8,3 +8,8 @@
 @import "basically-basic/themes/{{ site.data.theme.skin | default: 'default' }}";
 
 @import "basically-basic";
+
+code.language-plaintext.highlighter-rouge {
+  background: #1c2023;
+  color: $base05;
+}
