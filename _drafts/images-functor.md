@@ -4,9 +4,9 @@ title:  "Image editing with Functors"
 date:   2021-01-21 08:00:00 -0200
 image: 
     path: assets/posts/functor-images-invert.png
-tag: functional programming 
-tag: scala
-tag: category-theory
+tags: [functional programming, scala, category-theory]
+
+
 ---
 
 This was originally written as a self attempt to better understand FP concepts like functors, applicatives, monads, etc.

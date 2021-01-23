@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Equality in Scala "
-categories: scala
+title:  "Equality in Scala"
+tags: scala
 ---
 
 In Scala 2 the == operator is used for checking by value equality,

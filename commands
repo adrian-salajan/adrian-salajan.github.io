@@ -29,3 +29,10 @@ docker run --rm \
   -p 4000:4000 \
   -it jekyll/jekyll:4 \
 jekyll serve --drafts
+
+docker run \
+  --mount type=volume,source="$PWD,target=/srv/jekyll \
+  --mount type=volume,source="$PWD/vendor/bundle,target=/usr/local/bundle \
+  -p 4000:4000 \
+  -it jekyll/jekyll:4 \
+jekyll serve --drafts
