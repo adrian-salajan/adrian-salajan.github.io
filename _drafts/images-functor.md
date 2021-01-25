@@ -19,7 +19,7 @@ This was inspired by [Conal Elliott - Denotational Design: From Meanings To Prog
 ### Defining images
 This is very well explained in the presentation.
 
-TLDR we can say an Image is a function from location (x, y coordinates)
+TL;DR we can say an Image is a function from location (x, y coordinates)
 to some value A. In order to have them rendered on the screen we need visual images which will be a function from location to a Color.
 
 {% highlight scala %}
@@ -55,7 +55,7 @@ and this structure must obey two laws:
    - composition
 {% highlight scala %}
 map(map(fa, f), g) == map(fa, f.andThen(g))   
-fa.map(f).map(g) == fa.map(f, f.andThen(g)) // exhanced syntax
+fa.map(f).map(g) == fa.map(f, f.andThen(g)) // enhanced syntax
 {% endhighlight %}  
      
 
@@ -162,3 +162,5 @@ img.map(c => GREEN)
 ![ignore][ignore]
 
 ----
+  
+In the next post of this series we will see new effects with the help of applicatives.
