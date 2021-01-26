@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Image editing with Functors"
-date:   2021-01-21 08:00:00 -0200
+date:   2021-01-25 08:00:00 -0200
 image: 
     path: assets/posts/functor-images-invert.png
 tags: [functional programming, scala, category-theory]
