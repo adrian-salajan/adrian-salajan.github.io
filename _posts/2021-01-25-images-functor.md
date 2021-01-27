@@ -162,5 +162,10 @@ img.map(c => GREEN)
 ![ignore][ignore]
 
 ----
-  
-In the next post of this series we will see new effects with the help of applicatives.
+
+There are a lot more creative effects which one can do just by manipulating individual pixel colors.
+Beside the ones above you can find in the sample project implementations for:
+saturate, desaturate, invert colors, keep only one color channel (red / green / blue / alpha), swap colors.
+Of course many others useful effects can be done if one knows some color theory - which I don't.
+
+In the next post of this series we will see new effects done with the help of applicatives.
