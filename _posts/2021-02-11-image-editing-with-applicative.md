@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "Image editing with Applicative"
-date:   2021-02-09 08:00:00 -0200
+date:   2021-02-11 08:30:00 -0200
 image:
     path: assets/posts/applicative-image/recolor.png
-tags: [functional programming, scala, category-theory]
+tags: [functional programming, scala, category-theory, applicative, applicative functor]
 
 
 ---
-Continuing from [editing images with Functors](/blog/2021/01/11/images-functor), we will now understand Applicative by editing images with it.
+Continuing from [image editing with Functors](/blog/2021/01/25/images-functor), we will now understand Applicative by editing images with it.
 
 ### Applicative
 An applicative is composed of 2 things:
@@ -18,11 +18,14 @@ An applicative is composed of 2 things:
     * `map2(a: F[A], b: F[B], f: (A, B) => C): F[C]`
     * `app(f: F[A => B], a: F[A]): F[B]`
     
-or `app` with the enhanced sintax:
+Below `app` is used with the enhanced syntax:
 
-* `fab.app(a: F[A]): F[B]` where fab is of type F[A => B]
+{% highlight scala %}
+fab.app(a: F[A]): F[B]
+//where fab is of type F[A => B]
+{% endhighlight %}
 
-and this structure must obey the laws:
+This structure must obey the laws:
 
 - identity
 {% highlight scala %}
@@ -46,7 +49,7 @@ F.pure(compose).ap(fbc).ap(fab).ap(fa) == fbc.ap(fab.ap(fa))
 {% endhighlight %}
   
 These laws are a bit complicated, so again like Functors we will check them with Cats laws. The tests are more fine 
-grained than only these 4 laws so if some fail we will get a better idea what and where fix.
+grained than only these 4 laws so if some fail we will get a better idea what and where to fix.
 {% highlight scala %}
 checkAll("Applicative laws", ApplicativeTests(Image.imApplicative).applicative[Int, Int, String])
 {% endhighlight %}
@@ -88,17 +91,18 @@ def apply[A, B](ff: F[A => B])(fa: F[A]): F[B] =
 
 So it's clear that both `map2` and `apply` know how to merge F contexts/effects, but what about the difference in signatures?
 
-`ff: F[A => B]` from `apply` is the partial application of `f: (A, B) => C` from `map2` with `a: F[A]`,
-it kinda holds a `F[A]` inside. More precisely it's a program which ran with input A will produce a F[B].
+`ff: F[A => B]` from `apply` is the partial application of `f: (A, B) => C` from `map2` with `a: F[A]`.
+It kinda holds a `F[A]` inside. More precisely it's a program which ran with input A will produce a F[B].
 We'll see this below on images.
 
 #### Applicative is also a Functor
+The complete name is: [applicative functor](http://www.staff.city.ac.uk/~ross/papers/Applicative.pdf).
 {% highlight scala %}
 def map[A, B](fa: F[A])(f: A => B): F[B] =
   ap(pure(f))(fa)
 {% endhighlight %}
 
-But functor is not an applicative, functor does not have `pure` so it does not know anything about what `F` means.
+But functor is not an applicative, functor does not have `pure` so it does not know as much about what `F` means.
 
 #### Applicative on images
 {% highlight scala %}
@@ -161,7 +165,7 @@ overlapIf(bird, crayons,  c => c.isWhiteish)
 
 ![sw][sw]
 
-#### Disolve (creates a new images randomly taking color from A or B)
+#### Disolve (creates a new image randomly taking color from A or B)
 
 {% highlight scala %}
 overlapIf(bird, crayons,  _ => Math.random() > 0.5)
@@ -247,7 +251,9 @@ And one more fun example, combined with the bird image:
 
 ![checkers](/assets/posts/applicative-image/psychedelicsBird.png)
 
-And the core image
+And the core image embedded in the `F[A => B]`
 
 ![checkers](/assets/posts/applicative-image/psychedelics.png)
+
+In the next post of this series we will see new effects done with the help of other structures from category theory, maybe monad or contravariant functor.
 
