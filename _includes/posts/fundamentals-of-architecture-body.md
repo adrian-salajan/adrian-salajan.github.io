@@ -1,9 +1,9 @@
 # Fundamentals
 
-architecture = structure + characteristics(-illities) + decisions +
-design principles Structure = type of architecture -illities =
-availability, reliability, testability, scalability, security,
-elasticity, fault tolerance, performance, deployability, agility
+architecture = structure + characteristics(-illities) + decisions + design principles  
+Structure = type of architecture  
+-illities = availability, reliability, testability, scalability, security,
+elasticity, fault tolerance, performance, deployability, agility  
 decisions = the rules for building the system design principles =
 guidelines
 
