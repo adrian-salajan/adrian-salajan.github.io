@@ -5,12 +5,12 @@ Structure = type of architecture
 -illities = availability, reliability, testability, scalability, security,
 elasticity, fault tolerance, performance, deployability, agility  
 decisions = the rules for building the system  
-design principles = guidelines
+design principles = guidelines for building the system, they may be flexible
 
 ## Expectations of an architect
 
 -   make architecture decisions
--   continually analyze the architeture
+-   continually analyze the architecture
 -   ensure compliance
 -   posses interpersonal skills
 -   have domain knowledge
@@ -21,7 +21,7 @@ design principles = guidelines
 
 1.  Everything in software is a trade-off. If you think a solution does
     not have a trade-off most likely you didn\'t find it yet.
-2.  Why is more important than how. An architecutre diagram may explain
+2.  Why is more important than how. An architecture diagram may explain
     how a system works but not why it was built like that.
 3.  There are no right or wrong solutions, only trade-offs.
 
@@ -51,9 +51,9 @@ A characteristic:
 3.  is important to the systems success
 
 A system cannot have all the characteristics, it is important to
-initally choose the most important ones and add other in iterations. A
-good architecture is actually a least worse architecture for the given
-requirements
+initially choose the most important ones and add other in iterations. A
+good architecture is actually the least worse architecture for the given
+requirements.
 
 ### Operational characteristics
 
@@ -70,7 +70,6 @@ requirements
 
 -   configurability
 -   extensibility
--   instabilitty
 -   reuse
 -   localization/i18n
 -   portability
@@ -84,7 +83,7 @@ requirements
 -   archivability
 -   authentification
 -   authorization - access to only certain functions of the system
--   legal - data protection, gdpr, audis
+-   legal - data protection, gdpr, audit
 -   privacy - hide transactions from people developing/debugging the
     system
 -   security - encryption
@@ -97,10 +96,10 @@ Context - an isolated part of the application, exposing a clear model
 and API, hiding the details. Inside it keeps details only relevant to
 its responsibility ! creating universal shared models introduces
 coupling, the model needing to hold all possible details for it\'s
-usecases and so leaks details of one responsibilty into other ones.
+use-cases and so leaks details of one responsibility into other ones.
 
 in TDD each model is owned by a single BD, the model can have only
-relevant details in other BD where used, transormation is done between
+relevant details in other BD where used, transformation is done between
 same conceptual models in different BD at integration points (ports).
 
 # Component thinking
@@ -140,27 +139,27 @@ components for each entity.
 
 ### Workflows
 
--   models workflows, like ES, but not assumtion of events passing
+-   models workflows, like ES, but not assumption of events passing
 -   identifies roles, flows and components to handle them
 
 After initial component design check how architecture characteristics
 need to change it.
 
-Architecture quantas can have different characteristics One quanta = one
-set of architecture caracteristics = monolith
+Architecture quantas can have different characteristics.  
+One quanta = one set of architecture characteristics = monolith
 
 # Architecture styles
 
--   overarching structure of organization of UI, backendend, db
+-   overarching structure of organization of UI, backend, db
 
 ## Fallacies of distributed computing
 
 1.  The network is reliable
-    -   add timeouts and circuit brackers
+    -   add timeouts and circuit breakers
 2.  Latency is zero
-    -   know average latency roundtring in your network
+    -   know average latency round-trip in your network
     -   know the 95+th percentiles latencies
-3.  Bandwithd is infinite
+3.  Bandwidth is infinite
     minimize data with:
 -   private RESTful API
 -   use field selectors
@@ -181,8 +180,7 @@ set of architecture caracteristics = monolith
     -   transactional sagas managed with event sourcing for compensation or
         state machines to manage state of tx
     -   BASE tx: BAsic availability, Soft state, Eventual consistency
-
-1.  Contract maintainance and versioning
+3.  Contract maintenance and versioning
 
 ## Layered architecture
 
@@ -197,7 +195,7 @@ set of architecture caracteristics = monolith
 
 -   good for product software in a single package
 -   plugin support
--   core system can be technicaly or domain partitioned
+-   core system can be technically or domain partitioned
 -   ui can be both separate or integrated deployment unit
 -   core has main db access, plugins can have their own separate db
 
@@ -241,7 +239,7 @@ subscribe for the event, process it and publish back another event.
 ### Mediator topology
 
 -   mediator which controls the workflow:
-    -   simple: apache camel, mule esbp, spring integration
+    -   simple: apache camel, mule esb, spring integration
     -   complex (or with manual intervention): apache ode, oracle BPEL
         (xml), BPM engine
     -   starting point should be a simple mediator that can delegate
@@ -279,7 +277,7 @@ subscribe for the event, process it and publish back another event.
 ### Virtualized middleware
 
 1.  Messaging grid
-    -   forwards requests to PU
+    -   forwards requests to Processing Units
     -   Keeps track of PU and requests
     -   usually web server with load balancing capabilities
 
@@ -318,15 +316,18 @@ entity trap - one MS per entity.
 
 When considering size, adapt to:
 
-1.  Purpose/domain Service should be cohesive and solve a business
+1.  Purpose/domain  
+    Service should be cohesive and solve a business
     requirement
-2.  Transactions Distributed transactions are very hard to manage - can
-    make the service bigger to avoid distributed tx
-3.  Choreography To much inter-service communication - can avoid if
+2.  Transactions  
+    Distributed transactions are very hard to manage - can
+    make the service bigger to avoid distributed tx.
+3.  Choreography  
+    To much inter-service communication - can avoid if
     making the service bigger
 
 -   can have a \"local\" mediator microservice when orchestration in
-    needed for complex procceses and better error handling
+    needed for complex processes and better error handling
 -   Don\'t do distributed transactions - increase granularity
 
 
@@ -337,9 +338,9 @@ When considering size, adapt to:
 -   gather info, justify decision, document decision, communicate to
     stakeholders
 
-### Antipatterns
+### Anti-patterns
 
--   Covering yout Assets - fear of decision taking
+-   Covering your Assets - fear of decision taking
 -   Groundhog day - unjustified decision which continually generates
     discussions -\> justify with both technical and business
     perspectives
@@ -359,21 +360,23 @@ Title, Status, Context, Decision, Consequences, Compliance, Notes
 
 ## Architecture risk
 
--   impact matrix impact/likelyhood
--   risk storming a select area: perf, scalability, technology, security
+-   impact matrix  
+    impact/likelyhood
+-   risk storming   
+    a select area: perf, scalability, technology, security
 
 ## Making teams effective
 
--   control adjustemnts: team familiarity, team size, experience,
+-   control adjustments: team familiarity, team size, experience,
     project complexity, project duration
 
 ### Team warning signs
 
 -   Process loss (e.g.: merge conflicts) - team too big
 -   Pluralistic ignorance: when one agrees with the group but privately
-    holds a different opinion. Architect should explicly question/ask
+    holds a different opinion. Architect should explicitly question/ask
     for members opinion
--   Diffusion of responsability
+-   Diffusion of responsibility
 
 ### Use checklists
 
@@ -394,7 +397,7 @@ Title, Status, Context, Decision, Consequences, Compliance, Notes
 
 ### Architect as a leader
 
--   50% of being a architect is about people, facilitation and
+-   50% of being an architect is about people, facilitation and
     leadership skills
 -   Every problem is also a people problem.
 -   use questions instead of statements: Have you thought about using a
