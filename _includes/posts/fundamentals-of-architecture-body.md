@@ -161,31 +161,26 @@ set of architecture caracteristics = monolith
     -   know average latency roundtring in your network
     -   know the 95+th percentiles latencies
 3.  Bandwithd is infinite
-
-minimize data with:
-
+    minimize data with:
 -   private RESTful API
 -   use field selectors
 -   GraphQL
 -   internal message endpoints
 
-1.  The network is secure
-
--   secure all endpoints
-
-1.  The network topology never changes
-2.  There is only one network admin
-3.  Transport cost is \$0
-4.  Network is homogeneous
+4.  The network is secure
+    -   secure all endpoints
+5.  The network topology never changes
+6.  There is only one network admin
+7.  Transport cost is \$0
+8.  Network is homogeneous
 
 ## Other difficulties in distributed software
 
 1.  Distributed logging
 2.  Distributed transactions
-
--   transactional sagas managed with event sourcing for compensation or
-    state machines to manage state of tx
--   BASE tx: BAsic availability, Soft state, Eventual consistency
+    -   transactional sagas managed with event sourcing for compensation or
+        state machines to manage state of tx
+    -   BASE tx: BAsic availability, Soft state, Eventual consistency
 
 1.  Contract maintainance and versioning
 
@@ -246,7 +241,6 @@ subscribe for the event, process it and publish back another event.
 ### Mediator topology
 
 -   mediator which controls the workflow:
-
     -   simple: apache camel, mule esbp, spring integration
     -   complex (or with manual intervention): apache ode, oracle BPEL
         (xml), BPM engine
@@ -285,22 +279,17 @@ subscribe for the event, process it and publish back another event.
 ### Virtualized middleware
 
 1.  Messaging grid
-
     -   forwards requests to PU
     -   Keeps track of PU and requests
     -   usually web server with load balancing capabilities
 
 2.  Data grid
-
     -   replicated cache, sync (usually) or async
     -   in the PU and also external of PU for distributed caches
 
 3.  Processing grid
-
     -   optional: coordinates different PU to handle a complex flow
-
 4.  Deployment manager
-
     -   monitors and starts/stops PU based on load
 
 ### Data pumps
@@ -413,12 +402,12 @@ Title, Status, Context, Decision, Consequences, Compliance, Notes
 -   use people\'s names in conversation
 -   turn a request into asking for a favor
 
-1.  4Cs of architecture
+4Cs of architecture
 
-    -   Communication
-    -   Collaboration
-    -   Clarity
-    -   Conciseness
+-   Communication
+-   Collaboration
+-   Clarity
+-   Conciseness
 
 ## Architect career path
 
