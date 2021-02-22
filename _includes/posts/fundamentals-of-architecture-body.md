@@ -4,8 +4,8 @@ architecture = structure + characteristics(-illities) + decisions + design princ
 Structure = type of architecture  
 -illities = availability, reliability, testability, scalability, security,
 elasticity, fault tolerance, performance, deployability, agility  
-decisions = the rules for building the system design principles =
-guidelines
+decisions = the rules for building the system  
+design principles = guidelines
 
 ## Expectations of an architect
 
