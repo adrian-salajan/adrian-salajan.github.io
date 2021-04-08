@@ -18,14 +18,30 @@ A monad is composed of 2 things:
 * `flatMap(fa: F[A], f: A => F[B]): F[B]`
 * map + `flatten(fa: F[F[A]]): F[A]`
 
-Just like applicative, these functions also have to obey some laws
-- left-identity law:
-unit(x).flatMap(f) == f(x)
-- right-identity law:
-m.flatMap(unit) == m
-- associativity law:
-m.flatMap(f).flatMap(g) == m.flatMap(x ⇒ f(x).flatMap(g))
+Just like applicative, these functions also have to obey some laws:
 
+Below `flatMap` is used with the enhanced syntax:
+
+{% highlight scala %}
+fa.flatMap(f: A => F[B]): F[B]
+//where fa is of type F[A]
+{% endhighlight %}
+
+- left-identity
+{% highlight scala %}
+F.pure(x).flatMap(f) == f(x)
+{% endhighlight %}
+  
+- right-identity
+{% highlight scala %}
+m.flatMap(a => F.pure(a)) == m
+{% endhighlight %}
+  
+- associativity
+{% highlight scala %}
+m.flatMap(f).flatMap(g) == m.flatMap(x => f(x).flatMap(g))
+{% endhighlight %}
+  
 They can be checked automatically with cats-laws:
   
 {% highlight scala %}
@@ -60,7 +76,8 @@ def flatten[F[_], A](ffa: F[F[A]]): F[A] = flatMap(ffa)(a => a)
 #### Monad on Images
 
 Before and even after I implemented Monad on Images it was very unclear for a while how to do anything useful. What does it mean to have flatMap on Images ? 
-Given a color image, from each color build a new image and somehow return a single image back? Well apparently yes, the new image is what f draw on top of it, given the color at each location.
+Given a color image, from each color build a new image and somehow return a single image back? Well apparently yes,
+the new image is what the function `f` draws on top of it, given the color at each location.
 
 {% highlight scala %}
 def flatMap[A, B](fa: Image[A])(f: A => Image[B]): Image[B] = new Image[B] ({
@@ -135,6 +152,28 @@ Image.redCircle(Color.Green, 300, 200, 200)
 
 ![drawing](/assets/posts/monad-image/monad-border-and-circle.png)
 
+-----
+
+
+Starting from a blue background draw a red circle but keep only the top half of the circle, the bottom is the original blue background.
+{% highlight scala %}
+Image.imMonad.pure(Color.Blue)
+  .flatMap(bg => Image.redCircle(bg, 200, 200, 200).flatMap(circleColor => Image.topHalf(circleColor, bg)))
+{% endhighlight %}  
+![drawing-stripes](/assets/posts/monad-image/half-of-circle.png)
+
+-----
+
+Starting from a blue background draw stripes on it where the color of the stripes is the color taken fro, the bird image at the respective location.  
+So the actual color of the stripes is not blue, but the color from the bird image.
+{% highlight scala %}
+  Image.imMonad.pure(Color.Blue)
+    .flatMap(bg => bird.flatMap(birdColor => Image.stripes(birdColor, bg)))
+{% endhighlight %}  
+![drawing-stripes](/assets/posts/monad-image/stripes-from-bird-color.png)
+
+-----
+
 On the bird image, draw a red circle but only keep the bottom half,  
 then over draw stripes but with the color taken from the crayons image at corresponding location and here keep only the top half,  
 then over draw a red circle,  
@@ -148,4 +187,13 @@ bird.flatMap(birdColor => Image.redCircle(birdColor, 300, 200, 200).flatMap(circ
 {% endhighlight %}
 ![drawing-on-bird](/assets/posts/monad-image/birdie-border-and-circle.png)
 
+-----
+
 Drawing with functional programming, this is becoming addictive fast.
+We can do a lot of image editing already with [Functors](/blog/2021/01/25/images-functor), [Applicatives](/blog/2021/02/11/image-editing-with-applicative) and Monads,
+but we are limited on operations on pixels at the same location:  
+- functors - apply color transformation on the original pixel,
+- applicative - blend two color pixels together,
+- monad - draw a completely new image given the original pixel color and blend back this new image in the original one.
+  
+For now its impossible to move/switch pixels around for example resize/skew/mirror the image of create swirl effects. We'll try to do this in the next post.
