@@ -168,4 +168,4 @@ Beside the ones above you can find in the sample project implementations for:
 saturate, desaturate, invert colors, keep only one color channel (red / green / blue / alpha), swap colors.
 Of course many others useful effects can be done if one knows some color theory - which I don't.
 
-In the next post of this series we will see new effects done with the help of applicatives.
+In the [next post](/blog/2021/02/11/image-editing-with-applicative) of this series we will see new effects done with the help of applicatives.

@@ -1,7 +1,6 @@
 ---
 layout: post
 title:  "Image editing with Monads"
-date:   2021-04-07 08:30:00 -0200
 image:
     path: assets/posts/monad-image/birdie-border-and-circle.png
 tags: [functional programming, scala, category-theory, monad]
@@ -80,10 +79,30 @@ Given a color image, from each color build a new image and somehow return a sing
 the new image is what the function `f` draws on top of it, given the color at each location.
 
 {% highlight scala %}
-def flatMap[A, B](fa: Image[A])(f: A => Image[B]): Image[B] = new Image[B] ({
+  implicit val imMonad: Monad[Image] = new Monad[Image] {
+
+    override def pure[A](x: A): Image[A] = new Image[A]({
+      _: Loc => x
+    })
+
+    override def flatMap[A, B](fa: Image[A])(f: A => Image[B]): Image[B] = new Image[B]({
       loc =>
         val img: Image[B] = f(fa.im(loc))
         img.im(loc)
+    })
+
+    //required for the stack-safety of some helper functions of monad which perform iterations
+    @tailrec
+    override def tailRecM[A, B](a: A)(f: A => Image[Either[A, B]]): Image[B] = new Image[B]({
+      loc =>
+        def rec(ab: Either[A, B]): B = ab match {
+          case Left(a) => rec(f(a).im(loc))
+          case Right(b) => b
+        }
+
+        rec(f(a).im(loc))
+    })
+
 })
 {% endhighlight %}
 
@@ -196,4 +215,4 @@ but we are limited on operations on pixels at the same location:
 - applicative - blend two color pixels together,
 - monad - draw a completely new image given the original pixel color and blend back this new image in the original one.
   
-For now its impossible to move/switch pixels around for example resize/skew/mirror the image of create swirl effects. We'll try to do this in the next post.
+For now its impossible to move/switch pixels around for example resize/skew/mirror the image or create swirl effects. We'll try to do this in the next post.

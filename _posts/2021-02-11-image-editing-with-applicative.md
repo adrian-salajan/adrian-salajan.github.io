@@ -255,5 +255,5 @@ And the core image embedded in the `F[A => B]`
 
 ![checkers](/assets/posts/applicative-image/psychedelics.png)
 
-In the next post of this series we will see new effects done with the help of other structures from category theory, maybe monad or contravariant functor.
+In the [next post](/blog/2021/04/09/image-editing-with-monads) of this series we will see new capabilities implemented with the help of monads.
 
