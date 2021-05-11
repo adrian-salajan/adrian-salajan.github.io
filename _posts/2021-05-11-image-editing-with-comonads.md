@@ -1,7 +1,6 @@
 ---
 layout: post
 title:  "Image editing with Comonads"
-date:   2021-09-10 08:30:00 -0200
 image:
     path: assets/posts/comonad-image/average-16px.png
 tags: [functional programming, scala, category-theory, comonad]
@@ -12,7 +11,7 @@ Continuing from [image editing with Monads](/blog/2021/04/09/image-editing-with-
 
 ### Comonad
 
-A comonad is like a monad only in reverse. Monads wraps contexts over a value, comonads extract the value from the context.
+A comonad is like a monad only in reverse, meaning the types and arrows go in different directions.
 
 A comonad is composed of 2 things:
 1. A function which can extract `A` from the context `F`:  `extract(a: F[A]): A` 
@@ -58,13 +57,14 @@ coflatMap(fa: F[A], f: F[A] => B): F[B]
 We can better understand by comparing it to its dual flatmap `flatMap(fa: F[A], f: A => F[B]): F[B]`  
 CoflatMap reduces the whole F[A] into a new B while maintaining the context F, while flatMap is building a completely new F[B]
 from an A. Both functions perform effect chaining but while doing so coflatMap looks at the whole and flatMap looks just inside.  
+Or yet another way to think about it: comonads are queries. They extract something from a bigger structure.
 
 #### coflatten
 {% highlight scala %}
 coflatten(fa: F[A]): F[F[A]]
 {% endhighlight %}
 
-This is adding effects, in duality of monad's flatten which merges them.
+This is adding effects (structure), in duality of monad's flatten which does merging.
 
 #### CoflatMap vs coflatten and Map
 
@@ -98,17 +98,29 @@ def coflatten[F[_], A](fa: F[A]): F[F[A]] = coflatMap(fa)(fa => fa)
      override def map[A, B](fa: Image[A])(f: A => B): Image[B] = {
        coflatMap(fa)(img => f(extract(img)))
      }
+
+    //not needed for definition, included for better understanding
+    def coflatten[A](fa: Image[A]): Image[Image[A]] =
+      new Image[Image[A]] (
+         la => new Image[A](
+           lb => fa.im(Loc(lb.x + la.x, lb.y + la.y))
+         )
+      )
 {% endhighlight %}
 
 For extract there is only one thing we can do, extract the first pixel, the color at coordinates (0, 0).
 We can be sure that we have at least this pixel in the image, if we would
-to extract (5, 5) for example it could be missing since we can have a 4/4px image size.  
+to extract (5, 5) it could be missing since we can have a 4/4px image.  
 
 Same for coflatMap, there is not much we can do that makes sense. We have an Image[A], and a function that extracts a B, but we need to return an image.
 So what we do for each pixel in the original image, we construct a new image which is translated on the X and Y axis equal to the original pixels location -
-or in other words an image of images where each smaller imagehaving the original pixel moved at (0, 0). We then feed this image to f and get back the new color for the pixels in Image[B].
+or in other words an image of images where each smaller image having the original pixel moved at (0, 0) (If we were to stop at this point this is basically the definition of coflatten.)
+We then feed this image to f and get back the new value for the pixels in Image[B].
 
-Effectively this allows changing each pixel from the original image into a new pixel based on his neighbouring pixels.
+Maybe it's more intuitive to think about it in terms of coflatten + map. Coflatten builds upon the structure, an image of images 
+(each pixel from the original becomes a new original image moved such that the original pixel is at location (0, 0)) and them map comes through and transforms each sub-image into a pixel.
+
+Effectively this allows changing each pixel from the original image into a new pixel based on his location or on his neighbouring pixels.
 This allows some pretty neat image manipulation capabilities.
 
 Translate the image on X and Y axis.
@@ -194,3 +206,10 @@ Where Image.gausianBlur, Image.edgeDetect, Image.emboss, are some matrices like 
 
 #### Gausian blur
 ![gausian_blur](/assets/posts/comonad-image/gausian_blur.png)
+
+#### Limitations
+As we've seen comonad allows manipulation of the whole image, having access to the whole (or parts of it), not just individual pixels.
+This allows transformations like translate and in theory it should also allow mirrors, skews, swirls, resize but due to how I choose to represent an Image (Location(x, y) => Color)
+this is not possible. All of these transformations involve pixels moving around a common global point, and in this Image representation there is no information about this. 
+Every comonad transformation creates new shifted images, but this relative shift is not remembered anywhere - if it would we could use it to calculate back the coordinates of a global point
+around which all other pixels could move. There will probably be a second blog post with these changes.
